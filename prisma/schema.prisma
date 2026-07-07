@@ -1,0 +1,204 @@
+// Cloud-Based Blood Bank Management System - Prisma Schema
+// Group E - Ghana Communication Technology University
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============ FACILITY ============
+model Facility {
+  id             String   @id @default(cuid())
+  name           String
+  type           String   // Clinic, District Hospital, Regional Hospital, Teaching Hospital
+  location       String
+  region         String
+  contactPhone   String
+  contactEmail   String
+  status         String   @default("Pending") // Pending, Active, Suspended
+  registeredById String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  users           User[]
+  donors          Donor[]
+  storageUnits    StorageUnit[]
+  bloodUnits      BloodUnit[]
+  internalRequests InternalRequest[]
+  networkRequests NetworkRequest[]
+  responses       NetworkResponse[]
+  auditLogs       AuditLog[]
+}
+
+// ============ USER ============
+model User {
+  id            String   @id @default(cuid())
+  facilityId    String
+  fullName      String
+  email         String   @unique
+  passwordHash  String
+  role          String   // SYS_ADMIN, BBO, LAB_TECH, HOSP_ADMIN, NURSE_DOCTOR
+  status        String   @default("Active") // Active, Disabled
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  facility            Facility          @relation(fields: [facilityId], references: [id])
+  registeredBloodUnits BloodUnit[]       @relation("RegisteredBy")
+  internalRequests    InternalRequest[] @relation("RequestedBy")
+  networkRequests     NetworkRequest[]  @relation("RequestedBy")
+  auditLogs           AuditLog[]
+}
+
+// ============ DONOR ============
+model Donor {
+  id              String   @id @default(cuid())
+  facilityId      String
+  fullName        String
+  phone           String
+  email           String?
+  dateOfBirth     DateTime?
+  bloodGroup      String   // A+, A-, B+, B-, AB+, AB-, O+, O-
+  rhesus          String   // + or -
+  lastDonationAt  DateTime?
+  consentGiven    Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  facility   Facility     @relation(fields: [facilityId], references: [id])
+  bloodUnits BloodUnit[]
+}
+
+// ============ STORAGE UNIT ============
+model StorageUnit {
+  id             String   @id @default(cuid())
+  facilityId     String
+  name           String
+  tempCategory   String   // Refrigerated (1-6 C), Frozen (-18 C and below), Room Temperature (20-24 C)
+  temperatureC   Float
+  maxCapacity    Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  facility    Facility     @relation(fields: [facilityId], references: [id])
+  bloodUnits  BloodUnit[]
+}
+
+// ============ BLOOD UNIT ============
+model BloodUnit {
+  id              String   @id @default(cuid())
+  unitCode        String   @unique // unique unit identifier like GH-ACC-00001
+  facilityId      String
+  donorId         String?
+  storageUnitId   String?
+  bloodGroup      String   // A+, A-, B+, B-, AB+, AB-, O+, O-
+  rhesus          String   // + or -
+  componentType   String   // Whole Blood, Red Blood Cells, Platelets, Fresh Frozen Plasma
+  collectionDate  DateTime
+  expiryDate      DateTime
+  status          String   @default("Available") // Available, Reserved, Issued, Expired, Discarded
+  registeredById  String
+  reservedUntil   DateTime? // for network reservation
+  reservedForNetworkRequestId String?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  facility     Facility     @relation(fields: [facilityId], references: [id])
+  donor        Donor?       @relation(fields: [donorId], references: [id])
+  storageUnit  StorageUnit? @relation(fields: [storageUnitId], references: [id])
+  registeredBy User         @relation("RegisteredBy", fields: [registeredById], references: [id])
+  internalRequest InternalRequest? @relation("IssuedFor")
+  networkResponse NetworkResponse? @relation("OfferedUnit")
+}
+
+// ============ INTERNAL BLOOD REQUEST ============
+model InternalRequest {
+  id              String   @id @default(cuid())
+  facilityId      String
+  requestedById   String
+  bloodGroup      String
+  rhesus          String
+  componentType   String?
+  quantity        Int      @default(1)
+  urgency         String   // Routine, Urgent, Emergency
+  patientRef      String
+  patientName     String?
+  ward            String?
+  status          String   @default("Pending") // Pending, Approved, Issued, Rejected, Cancelled
+  notes           String?
+  issuedUnitId    String?  @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  facility    Facility    @relation(fields: [facilityId], references: [id])
+  requestedBy User        @relation("RequestedBy", fields: [requestedById], references: [id])
+  issuedUnit  BloodUnit?  @relation("IssuedFor", fields: [issuedUnitId], references: [id])
+}
+
+// ============ NETWORK BLOOD REQUEST ============
+model NetworkRequest {
+  id              String   @id @default(cuid())
+  requestCode     String   @unique
+  facilityId      String
+  requestedById   String
+  bloodGroup      String
+  rhesus          String
+  componentType   String?
+  quantity        Int      @default(1)
+  urgency         String   // Routine, Urgent, Emergency
+  patientRef      String?
+  noteToFacilities String?
+  status          String   @default("Open") // Open, Partially Responded, Reserved, Fulfilled, Expired, Cancelled
+  reservationExpiryHours Int @default(24)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  facility    Facility            @relation(fields: [facilityId], references: [id])
+  requestedBy User                @relation("RequestedBy", fields: [requestedById], references: [id])
+  responses   NetworkResponse[]
+}
+
+// ============ NETWORK RESPONSE ============
+model NetworkResponse {
+  id              String   @id @default(cuid())
+  networkRequestId String
+  respondingFacilityId String
+  offeredUnitId   String?  @unique
+  responderNote   String?
+  status          String   @default("Pending") // Pending, Selected, Rejected, Withdrawn
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  networkRequest  NetworkRequest @relation(fields: [networkRequestId], references: [id])
+  respondingFacility Facility @relation(fields: [respondingFacilityId], references: [id])
+  offeredUnit  BloodUnit? @relation("OfferedUnit", fields: [offeredUnitId], references: [id])
+}
+
+// ============ AUDIT LOG ============
+model AuditLog {
+  id            String   @id @default(cuid())
+  userId        String?
+  facilityId    String?
+  action        String   // CREATE, UPDATE, STATUS_CHANGE, DELETE, LOGIN, LOGOUT
+  entityType    String   // Facility, User, BloodUnit, InternalRequest, NetworkRequest, etc.
+  entityId      String?
+  description   String
+  ipAddress     String?
+  createdAt     DateTime @default(now())
+
+  user     User?      @relation(fields: [userId], references: [id])
+  facility Facility?  @relation(fields: [facilityId], references: [id])
+}
+
+// ============ SYSTEM SETTINGS ============
+model SystemSetting {
+  id            String   @id @default(cuid())
+  key           String   @unique
+  value         String
+  description   String?
+  updatedAt     DateTime @updatedAt
+}

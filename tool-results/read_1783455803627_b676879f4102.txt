@@ -1,0 +1,1312 @@
+     1→[]
+     2→
+     3→GHANA COMMUNICATION TECHNOLOGY UNIVERSITY
+     4→
+     5→FACULTY OF COMPUTING AND INFORMATION SYSTEMS
+     6→
+     7→DEPARTMENT OF INFORMATION SYSTEMS
+     8→
+     9→TITLE:
+    10→
+    11→CLOUD BASED BLOOD BANK MANAGEMENT SYSTEM
+    12→
+    13→BY
+    14→
+    15→NKRUMAH PAA KWADWO BOADI - [4211230195]
+    16→
+    17→TETTEY KINGSLEY - [4211231275]
+    18→
+    19→AMOAKWA BAMFO CALEB - [4211231179]
+    20→
+    21→SUPERVISOR:
+    22→
+    23→DR. PATRICK ACHEAMPONG
+    24→
+    25→DATE:
+    26→
+    27→JUNE 2026
+    28→
+    29→TABLE OF CONTENTS
+    30→
+    31→CHAPTER ONE: INTRODUCTION
+    32→
+    33→1.1 Introduction
+    34→
+    35→Blood is a vital and irreplaceable biological resource. Unlike most
+    36→medical supplies, it cannot be manufactured synthetically and must be
+    37→voluntarily donated, carefully stored, and efficiently distributed to
+    38→patients who need it (World Health Organization [WHO], 2022). Blood
+    39→transfusions are essential across a wide range of clinical situations,
+    40→including emergency trauma care, surgical procedures, obstetric
+    41→haemorrhage, and the management of chronic disorders such as sickle cell
+    42→disease (Kassebaum et al., 2016). The institution responsible for
+    43→collecting, testing, storing, and distributing blood is known as a blood
+    44→bank, and its effective management is directly linked to patient
+    45→survival outcomes (Daniels and Bromilow, 2014).
+    46→
+    47→In many developing countries, including Ghana, blood bank operations
+    48→continue to rely on manual, paper-based processes or disconnected
+    49→spreadsheet systems. These approaches are error-prone, offer no
+    50→real-time visibility of stock, and make cross-facility coordination
+    51→nearly impossible (Olarewaju et al., 2020). The consequences are well
+    52→documented: blood wastage from poor expiry monitoring, delayed
+    53→transfusions during emergencies, and patients being referred between
+    54→hospitals without any confirmed availability of the required blood type
+    55→at the receiving facility.
+    56→
+    57→This project proposes the design and implementation of a Cloud-Based
+    58→Blood Bank Management System, enabling registered hospitals and clinics
+    59→to manage their own blood inventory while sharing real-time blood
+    60→availability across the network. The system introduces a broadcast
+    61→request model where a facility in need of blood sends a request to all
+    62→registered hospitals on the network, those with available stock respond,
+    63→and the requesting facility selects the most suitable match and reserves
+    64→the blood unit for the incoming patient. This directly addresses the
+    65→blind referral problem identified through primary research conducted as
+    66→part of this project.
+    67→
+    68→1.2 Background of the Study
+    69→
+    70→Blood bank management has historically depended on paper registers,
+    71→manual donor records, and physical stock ledgers. While these methods
+    72→function in low-volume environments, they are characterised by
+    73→significant weaknesses including data entry errors, inability to track
+    74→inventory in real time, difficulties in donor follow-up, and delayed
+    75→blood request processing (Agrawal et al., 2021). As healthcare demands
+    76→have grown, the inadequacy of these manual systems has become a pressing
+    77→operational and clinical concern (WHO, 2021).
+    78→
+    79→In Ghana, the National Blood Service Ghana (NBSG), established under Act
+    80→850 of 2013, is the statutory body responsible for ensuring a safe and
+    81→adequate national blood supply. Despite institutional efforts, the NBSG
+    82→collected approximately 187,000 units of blood in 2024 against an
+    83→estimated national requirement of 308,000 units, representing a
+    84→shortfall of approximately 40% (National Blood Service Ghana, 2023).
+    85→Fragmented, paper-based record-keeping in hospitals and blood collection
+    86→centres is a contributing factor, as it prevents efficient stock
+    87→monitoring, donor scheduling, and inter-facility coordination (Abdulai
+    88→et al., 2020).
+    89→
+    90→A further infrastructural gap was identified during this project's
+    91→preliminary research. Government hospitals in Ghana use the Lightwave
+    92→Health Information Management System (LMHIS) for managing patient
+    93→records and general administrative functions. However, LMHIS does not
+    94→include a blood bank module, meaning that even digitally equipped
+    95→facilities lack a dedicated system for blood inventory tracking, expiry
+    96→monitoring, or cross-facility blood availability sharing. This gap
+    97→directly motivated the scope of the proposed system.
+    98→
+    99→1.3 Problem Statement
+   100→
+   101→Despite the critical role of blood transfusion services in modern
+   102→healthcare, many blood banks in developing countries, including Ghana,
+   103→continue to rely on manual and fragmented systems for managing blood
+   104→storage, distribution, and hospital requests. These traditional
+   105→approaches are inefficient and unable to support the increasing demand
+   106→for fast, accurate, and coordinated blood management services (Olarewaju
+   107→et al., 2020). The dependence on paper-based records and isolated
+   108→facility-level processes creates significant challenges, including
+   109→inaccurate inventory records, delayed communication between healthcare
+   110→facilities, poor tracking of blood units, and difficulties in making
+   111→timely decisions during emergencies.
+   112→
+   113→The limitations of existing blood bank management practices affect
+   114→several critical areas of transfusion services. Manual recording of
+   115→blood collection, testing, storage, and distribution increases the
+   116→likelihood of human errors, including incorrect blood unit information
+   117→and inaccurate patient matching, which may compromise transfusion safety
+   118→(Stainsby et al., 2006; Bolton-Maggs et al., 2012). Furthermore, the
+   119→absence of real-time inventory monitoring makes it difficult for blood
+   120→banks and hospitals to know the availability, location, and expiry
+   121→status of blood units, contributing to unnecessary wastage and shortages
+   122→during urgent medical situations (Agrawal et al., 2021; Dumont et al.,
+   123→2015).
+   124→
+   125→Another major challenge is the lack of an interconnected platform that
+   126→allows hospitals and blood banks within a region to communicate
+   127→effectively. Currently, healthcare facilities may experience delays when
+   128→searching for available blood units from other institutions, resulting
+   129→in slower response times during emergencies. The absence of a
+   130→centralised digital system also limits the ability to generate accurate
+   131→reports, analyse blood demand patterns, and support effective planning
+   132→and decision-making (Emmanuel et al., 2021; WHO, 2021).
+   133→
+   134→A primary survey conducted in June 2026 among 14 healthcare
+   135→professionals across clinics, district hospitals, regional hospitals,
+   136→and teaching hospitals confirmed that 21.4% had experienced a patient
+   137→being referred for blood only for it to be unavailable upon arrival,
+   138→while a further 35.7% were unsure, meaning up to 57.1% of respondents
+   139→could not rule out a failed referral at their facility (Healthcare
+   140→Facility Blood Management Survey, 2026). A field interview at Alajo
+   141→Community Clinic further confirmed that referrals are frequently made
+   142→using personal contacts who may not answer during emergencies, resulting
+   143→in blind patient transfers.
+   144→
+   145→To address these challenges, this project proposes the development of a
+   146→cloud-based, multi-facility Blood Bank Management System that enables
+   147→healthcare facilities to manage blood inventory, monitor blood
+   148→availability in real time, and communicate efficiently with other
+   149→hospitals within a connected network through a structured broadcast
+   150→request model.
+   151→
+   152→1.4 Aims and Objectives
+   153→
+   154→1.4.1 Aim
+   155→
+   156→The aim of this project is to design and implement a cloud-based,
+   157→multi-facility Blood Bank Management System that enables registered
+   158→hospitals and clinics to manage blood inventory in real time, broadcast
+   159→blood requests across a network of registered facilities, and support
+   160→informed patient referrals through confirmed cross-facility blood
+   161→availability, thereby reducing blood wastage, failed referrals, and
+   162→preventable patient deaths.
+   163→
+   164→1.4.2 Objectives
+   165→
+   166→-   To investigate existing blood management processes, referral
+   167→    practices, and operational challenges across healthcare facilities
+   168→    in Ghana through primary survey research and field interviews.
+   169→
+   170→-   To analyse and document the functional and non-functional
+   171→    requirements of a cloud-based, multi-facility blood bank management
+   172→    system through stakeholder engagement and literature review.
+   173→
+   174→-   To design a cloud-hosted system architecture, relational database
+   175→    schema, and user interface for the staff portal and cross-facility
+   176→    network modules.
+   177→
+   178→-   To develop a fully functional cloud-based blood bank management
+   179→    system with a staff portal incorporating blood inventory management,
+   180→    storage tracking, expiry monitoring with automated alerts, blood
+   181→    request processing, and administrative reporting.
+   182→
+   183→-   To implement a cross-facility blood request broadcast module that
+   184→    allows a registered facility to send a blood request to all
+   185→    hospitals on the network, receive responses from facilities with
+   186→    available stock, reserve a matched unit during patient referral, and
+   187→    track the request through to fulfilment.
+   188→
+   189→-   To test and validate the system against defined functional and
+   190→    non-functional requirements, evaluating correctness, usability, and
+   191→    performance.
+   192→
+   193→-   To prepare detailed technical documentation, user manuals, and
+   194→    training guides to support hospital staff in using the system
+   195→    effectively.
+   196→
+   197→1.5 Significance of the Study
+   198→
+   199→The significance of this study lies in its potential to address a
+   200→documented and life-threatening gap in Ghana's blood management
+   201→infrastructure. By enabling real-time cross-facility blood visibility
+   202→and a structured broadcast request model, the system directly eliminates
+   203→the blind referral problem confirmed by this project's primary research,
+   204→in which up to 57.1% of surveyed facilities could not rule out a failed
+   205→referral having occurred (Healthcare Facility Blood Management Survey,
+   206→2026).
+   207→
+   208→From an operational standpoint, the system automates blood inventory
+   209→tracking, expiry monitoring, storage management, and request processing,
+   210→replacing manual and spreadsheet-based methods that offer no automated
+   211→safeguards. Academically, this project demonstrates the application of
+   212→modern cloud technologies to a real, validated healthcare problem,
+   213→contributing to the growing field of health informatics in the West
+   214→African context. It also provides a working model that could inform the
+   215→future development of a dedicated blood bank module within platforms
+   216→such as LMHIS.
+   217→
+   218→1.6 Justification of the Study
+   219→
+   220→The need for this system is justified on three grounds. First, from a
+   221→patient safety perspective, the risks associated with manual blood
+   222→management, including transfusion of expired units and delayed access to
+   223→blood during emergencies, are well documented causes of preventable
+   224→mortality (Stainsby et al., 2006). Second, Ghana's hospital digital
+   225→infrastructure (LMHIS) has no blood bank module, and no existing
+   226→platform provides cross-facility blood availability sharing or a
+   227→broadcast request system. Third, the 92.9% demand confirmation from
+   228→healthcare workers in the project's primary survey provides
+   229→near-unanimous stakeholder validation for the system's development
+   230→(Healthcare Facility Blood Management Survey, 2026).
+   231→
+   232→1.7 Organization of Study
+   233→
+   234→This project report is structured into five chapters. Chapter One
+   235→presents the introduction, covering the background, problem statement,
+   236→aims and objectives, significance, and justification. Chapter Two
+   237→provides the literature review, examining existing blood bank management
+   238→systems, related implementations in Africa and globally, the Technology
+   239→Acceptance Model as a theoretical framework, and gaps in current
+   240→knowledge. Chapter Three describes the system specification and design,
+   241→detailing the methodology, requirements, and system architecture.
+   242→Chapter Four covers system implementation and testing. Chapter Five
+   243→contains the conclusion and recommendations.
+   244→
+   245→1.8 Conclusion
+   246→
+   247→This chapter has established a clear and evidence-based foundation for
+   248→the development of a cloud-based, multi-facility Blood Bank Management
+   249→System. Primary research confirmed that blind patient referrals, failed
+   250→blood transfers, manual inventory tracking, and the absence of a
+   251→dedicated blood bank module in Ghana's existing hospital digital
+   252→infrastructure are real and consequential problems. The chapters that
+   253→follow build on this foundation to deliver a working system that
+   254→responds to a validated healthcare need.
+   255→
+   256→CHAPTER TWO: LITERATURE REVIEW
+   257→
+   258→Introduction
+   259→
+   260→Healthcare facilities across the world are increasingly transitioning
+   261→from traditional paper-based blood bank registers to digital blood
+   262→management information systems. As healthcare institutions expand and
+   263→the demand for safe, timely blood transfusion grows, the limitations of
+   264→paper-based systems have made digital solutions such as Blood Bank
+   265→Management Systems essential for efficient transfusion service delivery
+   266→(WHO, 2021; Agrawal et al., 2021). This chapter reviews relevant
+   267→literature related to blood bank management systems, discusses the
+   268→Technology Acceptance Model as a guiding theoretical framework, reviews
+   269→previous studies and related works, and identifies gaps that justify the
+   270→proposed system.
+   271→
+   272→2.1 Overview of Relevant Literature
+   273→
+   274→2.1.1 Concept of Blood Bank Management Systems
+   275→
+   276→A Blood Bank Management System is a digital platform used by hospitals
+   277→and blood collection centres to record, store, and manage information
+   278→related to blood donation, screening, storage, inventory, and issuance.
+   279→According to the World Health Organization, an effective blood
+   280→management information system should capture the full chain of custody
+   281→of a blood unit, from donor screening through to final issuance to a
+   282→patient (WHO, 2021). Modern systems provide structured fields and
+   283→validation checks ensuring that records are complete, standardised, and
+   284→verifiable before a unit is issued for transfusion (Bolton-Maggs et al.,
+   285→2012). The development of blood bank information systems can be traced
+   286→to early hospital laboratory information systems introduced from the
+   287→1980s onward, which later expanded to include donor management,
+   288→cross-matching support, and expiry monitoring (Stainsby et al., 2006).
+   289→
+   290→2.1.2 Benefits of Blood Bank Management Systems
+   291→
+   292→Blood Bank Management Systems provide several important benefits.
+   293→Digital systems provide live inventory dashboards allowing blood bank
+   294→officers to view stock levels by blood group and Rhesus factor at any
+   295→moment, directly improving inventory accuracy (Agrawal et al., 2021).
+   296→Automated expiry alerts flag units approaching their shelf life,
+   297→allowing staff to prioritise their use and directly reducing wastage
+   298→(Dumont et al., 2015). These systems also enhance communication between
+   299→hospital departments and facilities, enable faster decision-making
+   300→during emergencies, and support long-term planning through historical
+   301→demand data (Emmanuel et al., 2021; WHO, 2021; Stainsby et al., 2006).
+   302→
+   303→2.1.3 Blood Bank Systems in Africa
+   304→
+   305→The adoption of digital blood bank management systems across Africa has
+   306→grown gradually over the past two decades. Progesa, developed by
+   307→MAK-SYSTEM, is among the most widely deployed blood establishment
+   308→platforms used by national blood transfusion services, though
+   309→deployments typically depend on sustained donor funding and remain
+   310→outside the reach of hospital-level facilities (WHO, 2021). South
+   311→Africa's National Blood Service operates one of the more advanced
+   312→systems on the continent, though it requires significant sustained
+   313→investment not readily available to most other countries (Olarewaju et
+   314→al., 2020). In East Africa, national blood transfusion services in
+   315→countries such as Kenya have introduced computerised systems primarily
+   316→for HIV screening data management, but these have generally remained
+   317→centred on regional blood banks rather than extending real-time stock
+   318→visibility to district hospitals and clinics (WHO, 2021). Consistent
+   319→challenges across all deployments include unreliable electricity, poor
+   320→connectivity, high staff turnover, and shortages of trained blood bank
+   321→information personnel.
+   322→
+   323→2.1.4 Blood Bank Systems in Ghana
+   324→
+   325→Ghana has made gradual progress in digitising its health information
+   326→landscape, but blood bank management specifically remains one of the
+   327→least digitised areas of the country's healthcare system. DHIMS2,
+   328→Ghana's most widely deployed digital health platform, only supports
+   329→aggregate reporting and cannot manage individual blood units, donor
+   330→records, or facility-level inventory, making it unsuitable for blood
+   331→bank operations (Karuri et al., 2014). LHIMS, deployed in Ghana's major
+   332→teaching hospitals, supports patient registration and clinical
+   333→documentation but does not include a blood bank module. This gap was
+   334→directly confirmed through this project's preliminary research and forms
+   335→a central part of the justification for the proposed system. The
+   336→project's own primary survey found that 71.4% of facilities record blood
+   337→stock using a computer or spreadsheet and 21.4% still use paper, with no
+   338→facility reporting use of a dedicated blood bank management system
+   339→(Healthcare Facility Blood Management Survey, 2026).
+   340→
+   341→2.2 Theoretical Framework
+   342→
+   343→For this study, the Technology Acceptance Model (TAM) is adopted as the
+   344→guiding theoretical framework to explain the factors that will influence
+   345→healthcare professionals' acceptance and use of the proposed system. TAM
+   346→is relevant because the system introduces a significant change in how
+   347→blood bank officers and laboratory technicians record, retrieve, and
+   348→share blood inventory information, and the success of this change
+   349→depends on how staff perceive the system.
+   350→
+   351→2.2.1 Overview of the Technology Acceptance Model (TAM)
+   352→
+   353→The Technology Acceptance Model was developed by Fred D. Davis in 1989,
+   354→drawing from the Theory of Reasoned Action. TAM proposes that a user's
+   355→actual use of a technology is determined by their behavioural intention,
+   356→shaped by two core beliefs: Perceived Usefulness (PU) and Perceived Ease
+   357→of Use (PEOU) (Davis, 1989). Venkatesh and Davis (2000) later extended
+   358→the model, demonstrating its validity across various organisational and
+   359→technological contexts and establishing it as one of the most
+   360→empirically validated models in information systems research.
+   361→
+   362→2.2.2 Perceived Usefulness (PU)
+   363→
+   364→Perceived usefulness refers to the degree to which a person believes
+   365→that using a particular system will enhance their job performance
+   366→(Davis, 1989). The proposed system's cloud-based cross-facility
+   367→architecture directly strengthens perceived usefulness by enabling
+   368→instant stock verification, eliminating the personal contact-based
+   369→referral process confirmed as unreliable in this project's survey where
+   370→57.1% of respondents relied on contacts to confirm blood availability
+   371→(Healthcare Facility Blood Management Survey, 2026). Automated expiry
+   372→alerts, the broadcast request model, and cloud-based backups further
+   373→enhance the system's perceived operational value to blood bank staff.
+   374→Studies have consistently shown that healthcare professionals are more
+   375→likely to adopt digital systems they perceive as genuinely improving
+   376→efficiency and patient care safety (Holden and Karsh, 2010).
+   377→
+   378→2.2.3 Perceived Ease of Use (PEOU)
+   379→
+   380→Perceived ease of use refers to the degree to which a user believes that
+   381→interacting with a system will require minimal effort (Davis, 1989). In
+   382→blood bank settings, ease of use is especially critical since staff work
+   383→under significant time pressure during emergencies. Any system that is
+   384→complex or slow to navigate risks being abandoned in favour of familiar
+   385→manual alternatives, a pattern documented in healthcare environments
+   386→where usability challenges affect adoption (Olarewaju et al., 2020).
+   387→Research by Holden and Karsh (2010) confirmed that ease of use plays a
+   388→key role in healthcare technology adoption, a principle that directly
+   389→informs the interface design of the proposed system.
+   390→
+   391→2.2.4 Application of TAM in Health Information Systems
+   392→
+   393→TAM has been widely applied in health information systems research
+   394→examining the adoption of electronic medical records, laboratory
+   395→information systems, and hospital management systems. Holden and Karsh
+   396→(2010) reported that user acceptance is a critical factor in the
+   397→successful implementation of healthcare technologies and that even
+   398→technically sound systems fail if staff do not perceive them as useful
+   399→or easy to use. In this study, TAM provides the framework for ensuring
+   400→that the proposed system is designed around the operational realities of
+   401→blood bank staff rather than purely technical specifications.
+   402→
+   403→2.3 Previous Studies and Related Works
+   404→
+   405→2.3.1 SafeTrace Tx Blood Establishment Computer Software
+   406→
+   407→SafeTrace Tx, supported under Haemonetics, is one of the most widely
+   408→adopted Blood Establishment Computer Software platforms in
+   409→well-resourced healthcare systems, providing comprehensive functionality
+   410→covering donor management, blood typing and crossmatch support,
+   411→inventory control, and regulatory compliance (WHO, 2021). Despite its
+   412→advanced capabilities, these platforms are expensive to implement and
+   413→maintain, require significant local server infrastructure, and are
+   414→designed for single-facility deployment with no built-in mechanism for
+   415→cross-facility blood availability sharing, a core requirement identified
+   416→through this project's primary research.
+   417→
+   418→2.3.2 e-RaktKosh National Blood Bank Management System
+   419→
+   420→e-RaktKosh is a centralised, cloud-based blood bank management system
+   421→developed by India's Ministry of Health under the National Health
+   422→Mission. The platform connects blood banks across the country into a
+   423→single network, representing one of the closest real-world parallels to
+   424→the system proposed in this project (WHO, 2021). Despite its strengths,
+   425→e-RaktKosh depends on substantial government investment and sustained
+   426→institutional coordination at a national scale not currently available
+   427→in Ghana, and does not include a structured broadcast-and-response
+   428→workflow where a requesting facility actively receives direct responses
+   429→from facilities with matching stock.
+   430→
+   431→2.3.3 DHIMS2 District Health Information Management System
+   432→
+   433→DHIMS2 is Ghana's primary national digital health information platform,
+   434→used to collect and analyse health data at district, regional, and
+   435→national levels. Despite its national reach, DHIMS2 only supports
+   436→aggregate health services data and was not designed for unit-level blood
+   437→inventory management, donor tracking, or facility-to-facility blood
+   438→requests (Karuri et al., 2014), making it entirely unsuitable as a blood
+   439→bank management solution.
+   440→
+   441→2.3.4 LHIMS Local Health Information Management System
+   442→
+   443→LHIMS is a patient-level hospital management system deployed in Ghana's
+   444→major teaching hospitals, supporting patient registration, clinical
+   445→documentation, appointment management, and billing (Adokiya et al.,
+   446→2015). Despite its considerable strengths, LHIMS does not include a
+   447→blood bank module of any kind. Blood inventory, donor records, expiry
+   448→monitoring, and blood request processing are entirely outside the scope
+   449→of LHIMS as currently deployed. Its deployment has also remained limited
+   450→to a small number of large teaching hospitals, leaving most facilities
+   451→without access to any comparable digital system.
+   452→
+   453→2.4 How the Proposed System Addresses Identified Gaps
+   454→
+   455→2.4.1 Addressing Blind Referral Through Cross-Facility Broadcast Integration
+   456→
+   457→No existing system available and deployed in Ghana brings cross-facility
+   458→blood visibility and hospital-level inventory management together. The
+   459→proposed system directly addresses this by integrating blood unit
+   460→inventory, expiry monitoring, and a structured broadcast request module
+   461→into a single cloud-hosted platform shared across registered facilities,
+   462→directly resolving the blind referral failure confirmed in this
+   463→project's primary research where up to 57.1% of surveyed facilities
+   464→could not rule out a failed referral having occurred (Healthcare
+   465→Facility Blood Management Survey, 2026).
+   466→
+   467→2.4.2 Addressing Accessibility Through Cloud-Based Architecture
+   468→
+   469→The proposed system eliminates the infrastructure and cost barrier of
+   470→deployment entirely through its cloud-based architecture. A hospital
+   471→requires only internet access and a standard web browser to access the
+   472→full system, making it deployable across a far wider range of healthcare
+   473→facilities than existing solutions, from teaching hospitals to smaller
+   474→district facilities and clinics.
+   475→
+   476→2.4.3 Addressing Usability Through TAM-Informed Design
+   477→
+   478→The proposed system was designed with the Technology Acceptance Model as
+   479→its guiding framework, using role-based dashboards so each user sees
+   480→only the modules relevant to their role, and ensuring that critical
+   481→tasks such as checking stock by blood group or responding to a broadcast
+   482→request are accessible within a few clicks from the main dashboard,
+   483→directly targeting the usability failures that have undermined adoption
+   484→of comparable systems elsewhere.
+   485→
+   486→2.4.4 Addressing Downtime Through Cloud Reliability and Local Caching
+   487→
+   488→Cloud hosting provides significantly higher reliability and uptime than
+   489→locally hosted servers, with automated backups ensuring inventory data
+   490→is never permanently lost. A local caching mechanism allows essential
+   491→blood stock data to be temporarily stored on the local device during
+   492→connectivity disruptions and automatically synchronised with the central
+   493→database once the connection is restored.
+   494→
+   495→2.4.5 Addressing Security Through Role-Based Access and Compliance with Ghanaian Law
+   496→
+   497→The proposed system implements strict role-based access control,
+   498→comprehensive audit trails, HTTPS encryption, and explicit compliance
+   499→with Ghana's Data Protection Act, 2012 (Act 843), providing a legal and
+   500→ethical foundation for blood and donor data management that many
+   501→existing facility-level systems in Ghana have not addressed.
+   502→
+   503→2.4.6 What Makes the Proposed System Different
+   504→
+   505→What distinguishes the proposed system from all existing solutions
+   506→reviewed is the combination of cross-facility broadcast integration,
+   507→cloud accessibility, TAM-informed usability, and local context awareness
+   508→in a single platform. Existing systems address one or two of these
+   509→dimensions but not all of them together. The proposed system was built
+   510→specifically to bring all these qualities together in a solution
+   511→tailored to the realities of Ghanaian healthcare, making it not just
+   512→technically functional but genuinely deployable and adoptable across
+   513→hospitals and clinics of varying size and resource level.
+   514→
+   515→2.5 Conclusion
+   516→
+   517→This chapter provided a comprehensive review of blood bank and related
+   518→health information management systems. The review revealed a consistent
+   519→pattern: while considerable progress has been made in digitising health
+   520→information generally, blood bank management specifically remains
+   521→underserved in Ghana. The Technology Acceptance Model highlighted that
+   522→system success depends on how users perceive its usefulness and ease of
+   523→use, reinforcing the importance of TAM-informed design. These findings
+   524→justify the development of the proposed cloud-based, multi-facility
+   525→Blood Bank Management System. The next chapter presents the methodology,
+   526→system specification, and design of the proposed solution.
+   527→
+   528→CHAPTER THREE: SYSTEM SPECIFICATION AND DESIGN
+   529→
+   530→Introduction
+   531→
+   532→This chapter presents the system specification and design of the
+   533→proposed Cloud-Based Blood Bank Management System. It begins by
+   534→describing the software development methodology adopted for the project.
+   535→It then proceeds to the system specification, covering the analysis of
+   536→requirements, stakeholder analysis, functional requirements,
+   537→non-functional requirements, and use cases. The chapter concludes with
+   538→the system design, detailing the architectural design, database design,
+   539→user interface design, and security considerations. Together, these
+   540→elements form the technical blueprint upon which the system
+   541→implementation described in Chapter Four is based.
+   542→
+   543→3.1 Methodology
+   544→
+   545→The development of the Cloud-Based Blood Bank Management System followed
+   546→the Agile Software Development methodology, specifically an iterative
+   547→approach organised into four development sprints. Agile was selected
+   548→because it allows for incremental development, continuous feedback, and
+   549→the flexibility to refine requirements as understanding of the problem
+   550→deepens, making it particularly well suited to a project grounded in
+   551→ongoing primary research (Sommerville, 2016). Rather than attempting to
+   552→fully define and freeze all requirements before writing any code, the
+   553→Agile approach allowed the development team to begin building core
+   554→modules early and revisit design decisions as insights emerged from the
+   555→survey research, field interviews, and supervisor feedback.
+   556→
+   557→Sprint 1: Requirements and Design (Weeks 1 to 2)
+   558→
+   559→The first sprint focused on finalising system requirements through the
+   560→primary survey, field interview at Alajo Community Clinic, review of
+   561→existing systems documented in Chapter Two, and stakeholder
+   562→consultations. System architecture, database schema, and interface
+   563→wireframes were produced during this sprint, forming the design
+   564→specification described in this chapter.
+   565→
+   566→Sprint 2: Core Module Development (Weeks 3 to 6)
+   567→
+   568→The second sprint covered the development of the core blood bank
+   569→modules, including facility registration and onboarding, user
+   570→authentication and role-based access control, blood inventory
+   571→management, storage and refrigeration unit tracking, and automated
+   572→expiry monitoring and alerts.
+   573→
+   574→Sprint 3: Network and Request Modules (Weeks 7 to 9)
+   575→
+   576→The third sprint focused on implementing the cross-facility broadcast
+   577→request workflow, the blood request response and selection mechanism,
+   578→blood unit reservation during referral, internal ward-level blood
+   579→request processing, and the real-time dashboard showing inventory and
+   580→pending requests.
+   581→
+   582→Sprint 4: Testing, Reporting, and Finalisation (Weeks 10 to 12)
+   583→
+   584→The fourth sprint covered system integration testing, user acceptance
+   585→testing, bug fixing and refinement, development of the reporting module,
+   586→and preparation of technical documentation, user manuals, and training
+   587→guides.
+   588→
+   589→In addition to the software development methodology, the project applied
+   590→a mixed-methods research approach during the requirements gathering
+   591→phase. A quantitative online survey was distributed to 14 healthcare
+   592→professionals across multiple facility types in June 2026, complemented
+   593→by a qualitative field interview at Alajo Community Clinic. The findings
+   594→from both instruments directly informed the system requirements
+   595→documented in this chapter (Healthcare Facility Blood Management Survey,
+   596→2026; Alajo Community Clinic, 2026).
+   597→
+   598→3.2 System Specification
+   599→
+   600→3.2.1 Analysis of Requirements
+   601→
+   602→Requirements analysis was conducted through three complementary methods.
+   603→First, the primary survey administered to 14 healthcare professionals
+   604→provided quantitative data confirming the key operational gaps in
+   605→existing blood management practices, including the absence of real-time
+   606→inventory visibility, the failure of personal contact-based referral
+   607→systems, and the complete absence of cross-facility blood availability
+   608→sharing. Second, the field interview at Alajo Community Clinic provided
+   609→qualitative depth, describing in concrete terms how the current referral
+   610→process breaks down during emergencies. Third, a review of existing
+   611→systems, covering SafeTrace Tx, e-RaktKosh, DHIMS2, and LHIMS, revealed
+   612→specific functional gaps that the proposed system is designed to
+   613→address.
+   614→
+   615→From these three sources, the following key system needs were
+   616→identified: a cloud-hosted multi-facility platform accessible through a
+   617→web browser without local server installation; real-time blood inventory
+   618→management by blood group, Rhesus factor, and unit status; automated
+   619→expiry monitoring with configurable alert thresholds; a broadcast
+   620→request mechanism through which a facility in need can notify all
+   621→registered facilities simultaneously and receive direct responses; blood
+   622→unit reservation during inter-facility referral; role-based access
+   623→control protecting different levels of system functionality; and
+   624→reporting and dashboard tools for inventory visibility and operational
+   625→oversight.
+   626→
+   627→3.2.2 Stakeholder Analysis
+   628→
+   629→A stakeholder is any person or group that interacts with the system or
+   630→is affected by its outcomes. The following stakeholders were identified
+   631→for the Cloud-Based Blood Bank Management System:
+   632→
+   633→  --------------- ------------------ ------------------------------------
+   634→  Stakeholder     Role               System Interaction
+   635→
+   636→  System          Platform-level     Registers and manages hospital
+   637→  Administrator   admin              facilities on the network, manages
+   638→                                     system-wide settings and user
+   639→                                     accounts across all facilities.
+   640→
+   641→  Blood Bank      Primary            Manages blood unit inventory,
+   642→  Officer         operational user   processes internal blood requests,
+   643→                                     broadcasts network requests, reviews
+   644→                                     and responds to incoming network
+   645→                                     requests, and reserves units.
+   646→
+   647→  Laboratory      Blood processing   Records blood collection details,
+   648→  Technician      user               updates test and screening results,
+   649→                                     and updates blood unit status
+   650→                                     following compatibility testing.
+   651→
+   652→  Hospital        Facility-level     Manages staff accounts at their
+   653→  Administrator   admin              registered facility, views reports
+   654→                                     and dashboards for their facility
+   655→                                     blood stock and request activity.
+   656→
+   657→  Nurses and      Blood requesters   Submit internal blood requests from
+   658→  Doctors                            clinical wards or departments and
+   659→                                     track the status of pending
+   660→                                     requests.
+   661→
+   662→  Project         Academic           Provides guidance on system scope,
+   663→  Supervisor      stakeholder        evaluates deliverables, and approves
+   664→                                     the final project.
+   665→  --------------- ------------------ ------------------------------------
+   666→
+   667→Table 3.1: Stakeholder Analysis
+   668→
+   669→3.2.3 Functional Requirements
+   670→
+   671→Functional requirements define what the system must do. The following
+   672→twenty functional requirements were derived from the requirements
+   673→analysis and are organised by module:
+   674→
+   675→  ------ ------------------------------------------- ---------- ----------------
+   676→  FR     Requirement                                 Priority   Module
+   677→
+   678→  FR01   The system shall allow hospitals and        High       Facility Mgmt
+   679→         clinics to register on the platform and be             
+   680→         approved by the system administrator.                  
+   681→
+   682→  FR02   The system shall support user registration, High       Authentication
+   683→         login, and logout with secure                          
+   684→         password-based authentication.                         
+   685→
+   686→  FR03   The system shall enforce role-based access  High       Authentication
+   687→         control with distinct permissions for                  
+   688→         System Administrator, Blood Bank Officer,              
+   689→         Laboratory Technician, and Hospital                    
+   690→         Administrator roles.                                   
+   691→
+   692→  FR04   The system shall allow blood bank staff to  High       Inventory
+   693→         register blood units, capturing blood                  
+   694→         group, Rhesus factor, component type,                  
+   695→         collection date, expiry date, and storage              
+   696→         unit assignment.                                       
+   697→
+   698→  FR05   The system shall track the status of each   High       Inventory
+   699→         blood unit through its lifecycle:                      
+   700→         Available, Reserved, Issued, Expired, and              
+   701→         Discarded.                                             
+   702→
+   703→  FR06   The system shall allow blood bank staff to  High       Storage
+   704→         assign blood units to specific storage                 
+   705→         units and categorise storage by temperature            
+   706→         type: Refrigerated, Frozen, or Room                    
+   707→         Temperature.                                           
+   708→
+   709→  FR07   The system shall automatically flag blood   High       Alerts
+   710→         units approaching expiry within a                      
+   711→         configurable threshold (default 5 days) and            
+   712→         display alerts on the blood bank officer               
+   713→         dashboard.                                             
+   714→
+   715→  FR08   The system shall alert blood bank officers  High       Alerts
+   716→         when the available stock of any blood group            
+   717→         falls below a configurable minimum                     
+   718→         threshold.                                             
+   719→
+   720→  FR09   The system shall allow nurses and doctors   High       Requests
+   721→         to submit internal blood requests                      
+   722→         specifying blood group, Rhesus factor,                 
+   723→         quantity, urgency level, and patient                   
+   724→         reference.                                             
+   725→
+   726→  FR10   The system shall allow blood bank officers  High       Requests
+   727→         to process internal requests by identifying            
+   728→         a compatible available unit, approving or              
+   729→         rejecting the request, and updating                    
+   730→         inventory upon issuance.                               
+   731→
+   732→  FR11   The system shall allow a registered         High       Network
+   733→         facility to broadcast a network blood                  
+   734→         request specifying blood group, Rhesus                 
+   735→         factor, quantity, and urgency to all other             
+   736→         registered facilities on the platform.                 
+   737→
+   738→  FR12   The system shall notify all registered      High       Network
+   739→         facilities with matching available stock               
+   740→         when a network blood request is broadcast.             
+   741→
+   742→  FR13   The system shall allow blood bank officers  High       Network
+   743→         at responding facilities to select a                   
+   744→         matching unit and submit a response to an              
+   745→         open network request.                                  
+   746→
+   747→  FR14   The system shall allow the requesting       High       Network
+   748→         facility to review all responses to its                
+   749→         broadcast request and select the preferred             
+   750→         responding facility.                                   
+   751→
+   752→  FR15   The system shall allow the requesting       High       Network
+   753→         facility to reserve a selected blood unit              
+   754→         at the responding facility for a                       
+   755→         configurable period following selection.               
+   756→
+   757→  FR16   The system shall update the status of a     High       Network
+   758→         reserved unit to prevent it from being                 
+   759→         assigned to another request during the                 
+   760→         reservation period.                                    
+   761→
+   762→  FR17   The system shall maintain a complete audit  High       Security
+   763→         trail of all data entry, modification, and             
+   764→         status change events, recording the user,              
+   765→         action, and timestamp.                                 
+   766→
+   767→  FR18   The system shall provide a real-time        High       Dashboard
+   768→         dashboard for each facility showing current            
+   769→         stock levels by blood group, units nearing             
+   770→         expiry, pending internal requests, and                 
+   771→         pending network requests.                              
+   772→
+   773→  FR19   The system shall generate facility-level    Medium     Reporting
+   774→         reports on blood stock, usage, wastage, and            
+   775→         request fulfilment for a selected date                 
+   776→         range.                                                 
+   777→
+   778→  FR20   The system shall allow blood bank staff to  Medium     Donors
+   779→         record basic donor information including               
+   780→         name, contact details, blood group, Rhesus             
+   781→         factor, and donation history.                          
+   782→  ------ ------------------------------------------- ---------- ----------------
+   783→
+   784→Table 3.2: Functional Requirements
+   785→
+   786→3.2.4 Non-Functional Requirements
+   787→
+   788→Non-functional requirements define the quality attributes and
+   789→operational constraints of the system. The following ten non-functional
+   790→requirements were identified:
+   791→
+   792→  ------- ----------------- -----------------------------------------------------
+   793→  NFR     Category          Requirement
+   794→
+   795→  NFR01   Performance       The system shall load key pages, including the
+   796→                            inventory dashboard and network request broadcast
+   797→                            screen, within three seconds under normal network
+   798→                            conditions.
+   799→
+   800→  NFR02   Availability      The system shall maintain a minimum uptime of 99% per
+   801→                            month, leveraging cloud hosting redundancy and
+   802→                            automated failover to minimise service disruption.
+   803→
+   804→  NFR03   Security          All data transmitted between the client browser and
+   805→                            the server shall be encrypted using HTTPS (TLS 1.2 or
+   806→                            higher). Passwords shall be stored using the bcrypt
+   807→                            hashing algorithm.
+   808→
+   809→  NFR04   Security          The system shall comply with Ghana's Data Protection
+   810→                            Act, 2012 (Act 843), including requirements for
+   811→                            explicit user consent, lawful data processing, and
+   812→                            adequate security measures for personal data.
+   813→
+   814→  NFR05   Scalability       The system architecture shall support the addition of
+   815→                            new registered facilities without requiring changes
+   816→                            to the core codebase or database schema.
+   817→
+   818→  NFR06   Usability         The system interface shall be role-based, displaying
+   819→                            only modules and functions relevant to the logged-in
+   820→                            user's role, reducing information overload and
+   821→                            supporting fast navigation.
+   822→
+   823→  NFR07   Usability         The system shall be responsive and accessible through
+   824→                            standard web browsers on both desktop and mobile
+   825→                            devices without requiring software installation.
+   826→
+   827→  NFR08   Reliability       A local caching mechanism shall allow blood bank
+   828→                            officers to view the most recently retrieved
+   829→                            inventory data during brief internet connectivity
+   830→                            disruptions.
+   831→
+   832→  NFR09   Maintainability   The system codebase shall be modular and
+   833→                            well-documented to facilitate future updates, bug
+   834→                            fixes, and the addition of new modules by subsequent
+   835→                            developers.
+   836→
+   837→  NFR10   Compliance        The system shall maintain a full audit trail of all
+   838→                            data modifications, retaining logs for a minimum of
+   839→                            twelve months to support traceability and regulatory
+   840→                            review.
+   841→  ------- ----------------- -----------------------------------------------------
+   842→
+   843→Table 3.3: Non-Functional Requirements
+   844→
+   845→3.2.5 Use Cases
+   846→
+   847→Use cases describe the interactions between actors and the system to
+   848→achieve specific goals. The ten key use cases for the Cloud-Based Blood
+   849→Bank Management System are described in the table below:
+   850→
+   851→  ------ -------------- --------------- ------------------------------------
+   852→  ID     Use Case       Primary Actor   Description
+   853→
+   854→  UC01   Register Blood Blood Bank      Staff records a newly collected
+   855→         Unit           Officer / Lab   blood unit by entering blood group,
+   856→                        Technician      Rhesus factor, component type,
+   857→                                        collection date, expiry date, donor
+   858→                                        reference, and storage unit. The
+   859→                                        system assigns a unique unit ID and
+   860→                                        sets its status to Available.
+   861→
+   862→  UC02   Monitor Expiry Blood Bank      The system automatically checks all
+   863→         Alerts         Officer         blood units and flags units expiring
+   864→                                        within the configured threshold.
+   865→                                        Alerts appear on the officer
+   866→                                        dashboard and can be acknowledged or
+   867→                                        escalated.
+   868→
+   869→  UC03   Submit         Nurse / Doctor  A clinical staff member submits a
+   870→         Internal Blood                 blood request for a specific
+   871→         Request                        patient, specifying blood group,
+   872→                                        Rhesus factor, quantity, and
+   873→                                        urgency. The request is queued for
+   874→                                        the blood bank officer to process.
+   875→
+   876→  UC04   Process        Blood Bank      The officer reviews a pending
+   877→         Internal Blood Officer         internal request, identifies a
+   878→         Request                        compatible available unit, confirms
+   879→                                        compatibility, and approves the
+   880→                                        request. The unit status changes to
+   881→                                        Reserved then Issued upon handover.
+   882→
+   883→  UC05   Broadcast      Blood Bank      When a required blood type is
+   884→         Network Blood  Officer         unavailable at the facility, the
+   885→         Request                        officer submits a network broadcast
+   886→                                        request. The system notifies all
+   887→                                        registered facilities with matching
+   888→                                        available stock.
+   889→
+   890→  UC06   Respond to     Blood Bank      Upon receiving a network request
+   891→         Network        Officer         notification, the officer at a
+   892→         Request        (responding)    facility with matching stock selects
+   893→                                        a compatible unit and submits a
+   894→                                        response to the requesting facility.
+   895→
+   896→  UC07   Select         Blood Bank      The requesting facility reviews all
+   897→         Response and   Officer         responses received and selects the
+   898→         Reserve Unit   (requesting)    preferred option. The system
+   899→                                        reserves the selected unit at the
+   900→                                        responding facility for a
+   901→                                        configurable period.
+   902→
+   903→  UC08   Confirm or     Blood Bank      The responding facility confirms the
+   904→         Cancel         Officer         reservation upon patient arrival or
+   905→         Reservation    (responding)    cancels it if the patient does not
+   906→                                        arrive within the reservation
+   907→                                        window, returning the unit to
+   908→                                        Available status.
+   909→
+   910→  UC09   Generate       Hospital        The user selects a reporting period
+   911→         Inventory      Administrator / and generates a summary report
+   912→         Report         Blood Bank      showing stock levels, units issued,
+   913→                        Officer         units expired or discarded, and
+   914→                                        network request activity.
+   915→
+   916→  UC10   Manage Staff   Hospital        The administrator creates, updates,
+   917→         Accounts       Administrator   or deactivates staff user accounts
+   918→                                        at their facility and assigns roles.
+   919→                                        The system enforces role-based
+   920→                                        access immediately upon role
+   921→                                        assignment.
+   922→  ------ -------------- --------------- ------------------------------------
+   923→
+   924→Table 3.4: Use Cases
+   925→
+   926→3.3 System Design
+   927→
+   928→3.3.1 Architectural Design
+   929→
+   930→The Cloud-Based Blood Bank Management System is built on a three-tier
+   931→client-server architecture hosted on a cloud platform. This architecture
+   932→separates the system into three distinct layers, each with a defined
+   933→responsibility, improving maintainability, scalability, and security.
+   934→
+   935→Presentation Layer (Client Tier)
+   936→
+   937→The presentation layer is the user-facing component of the system,
+   938→delivered as a responsive web application accessible through any
+   939→standard web browser on both desktop and mobile devices. The frontend is
+   940→built using HTML5, CSS3, and JavaScript. Upon login, the system
+   941→identifies the user's role and renders only the modules and navigation
+   942→items applicable to that role, in line with the TAM-informed design
+   943→principles described in Chapter Two. No software installation is
+   944→required at the user's end, making the system immediately accessible to
+   945→any facility with internet access.
+   946→
+   947→Application Layer (Business Logic Tier)
+   948→
+   949→The application layer is the server-side component that handles all
+   950→business logic, data processing, and communication between the client
+   951→and the database. It is implemented using Python with the Django web
+   952→framework, exposing a RESTful API that the frontend communicates with
+   953→over HTTPS. The application layer handles user authentication and
+   954→session management, role-based permission enforcement, blood unit
+   955→lifecycle management, expiry monitoring, internal blood request
+   956→processing, and the broadcast request workflow.
+   957→
+   958→The broadcast request workflow is a core architectural feature of the
+   959→application layer. When a blood bank officer submits a network blood
+   960→request, the application server broadcasts a notification to all
+   961→registered facilities. Facilities with matching available blood units
+   962→receive an alert on their dashboard. Blood bank officers at responding
+   963→facilities review the request and submit responses through the API. The
+   964→requesting facility sees all responses in real time and selects the
+   965→preferred option. Upon selection, the application server updates the
+   966→status of the chosen unit to Reserved at the responding facility for the
+   967→duration of the reservation period.
+   968→
+   969→Data Layer (Database Tier)
+   970→
+   971→The data layer consists of a relational database hosted on the cloud,
+   972→implemented using MySQL. All system data, including facility records,
+   973→user accounts, blood unit records, donor information, internal requests,
+   974→network requests, responses, and audit logs, are stored in the database.
+   975→The cloud-hosted database provides automated backups, point-in-time
+   976→recovery, and replication for high availability, ensuring that blood
+   977→inventory data is never permanently lost due to hardware failure.
+   978→
+   979→The three tiers communicate as follows: the user's browser sends HTTPS
+   980→requests to the Django application server; the application server
+   981→processes the request, applies business logic and permission checks,
+   982→queries or updates the database as required, and returns a JSON
+   983→response; the browser renders the response as an updated user interface.
+   984→All communication between the browser and the application server is
+   985→encrypted using HTTPS.
+   986→
+   987→3.3.2 Database Design
+   988→
+   989→The database schema is designed around the core entities of the blood
+   990→bank system and their relationships. The nine primary entities and their
+   991→key attributes are described below:
+   992→
+   993→Facilities
+   994→
+   995→Stores information about each registered hospital or clinic on the
+   996→network. Key attributes include a unique facility identifier, facility
+   997→name, facility type (Clinic, District Hospital, Regional Hospital,
+   998→Teaching Hospital), physical location, contact information, registration
+   999→date, and status (Pending, Active, Suspended).
+  1000→
+  1001→Users
+  1002→
+  1003→Stores staff account information for all registered users across all
+  1004→facilities. Key attributes include a unique user identifier, a foreign
+  1005→key referencing the facility, full name, email address, bcrypt-hashed
+  1006→password, role (System Administrator, Blood Bank Officer, Laboratory
+  1007→Technician, Hospital Administrator), and account status. The role field
+  1008→governs access permissions throughout the system.
+  1009→
+  1010→Donors
+  1011→
+  1012→Maintains basic records of blood donors registered at each facility. Key
+  1013→attributes include a unique donor identifier, a foreign key referencing
+  1014→the registering facility, donor name, contact details, date of birth,
+  1015→blood group, Rhesus factor, and date of last donation. This table
+  1016→supports traceability and enables staff to contact a donor if a
+  1017→post-donation issue is identified.
+  1018→
+  1019→Storage Units
+  1020→
+  1021→Records the physical storage equipment within each facility. Key
+  1022→attributes include a unique storage unit identifier, a foreign key
+  1023→referencing the facility, storage unit name or label, temperature
+  1024→category (Refrigerated: 1 to 6 degrees Celsius; Frozen: minus 18 degrees
+  1025→Celsius and below; Room Temperature: 20 to 24 degrees Celsius), and
+  1026→maximum capacity. This supports appropriate storage assignment for
+  1027→different blood component types.
+  1028→
+  1029→Blood Units
+  1030→
+  1031→The central inventory table of the system. Key attributes include a
+  1032→unique unit identifier, foreign keys referencing the facility, the
+  1033→donor, and the assigned storage unit, blood group, Rhesus factor,
+  1034→component type (Whole Blood, Red Blood Cells, Platelets, Fresh Frozen
+  1035→Plasma), collection date, expiry date, current status (Available,
+  1036→Reserved, Issued, Expired, Discarded), and a foreign key referencing the
+  1037→staff member who registered the unit. Status transitions are validated
+  1038→by the application layer to prevent invalid state changes.
+  1039→
+  1040→Internal Blood Requests
+  1041→
+  1042→Records blood requests submitted from clinical wards or departments
+  1043→within the same facility. Key attributes include a unique request
+  1044→identifier, foreign keys referencing the facility and the requesting
+  1045→user, blood group, Rhesus factor, quantity, urgency level (Routine,
+  1046→Urgent, Emergency), patient reference, request timestamp, status
+  1047→(Pending, Approved, Issued, Rejected, Cancelled), and a foreign key
+  1048→referencing the blood unit eventually issued.
+  1049→
+  1050→Network Blood Requests
+  1051→
+  1052→Records broadcast blood requests submitted by a facility seeking blood
+  1053→from the wider network. Key attributes include a unique request
+  1054→identifier, foreign keys referencing the requesting facility and the
+  1055→requesting user, blood group, Rhesus factor, quantity, urgency level,
+  1056→broadcast timestamp, expiry timestamp, and status (Open, Partially
+  1057→Responded, Reserved, Fulfilled, Expired, Cancelled).
+  1058→
+  1059→Network Request Responses
+  1060→
+  1061→Records each response submitted by a facility in reply to an open
+  1062→network request. Key attributes include a unique response identifier,
+  1063→foreign keys referencing the network request, the responding facility,
+  1064→and the specific blood unit being offered, response timestamp, and
+  1065→status (Pending, Selected, Rejected, Withdrawn).
+  1066→
+  1067→Audit Logs
+  1068→
+  1069→Records all significant data modification events for traceability and
+  1070→regulatory compliance. Key attributes include a unique log identifier, a
+  1071→foreign key referencing the user who performed the action, the action
+  1072→type (Create, Update, Status Change, Delete), the affected record type
+  1073→and identifier, a timestamp, and the user's IP address. Audit logs are
+  1074→write-once and cannot be modified or deleted by any user role, ensuring
+  1075→a tamper-resistant record of all system activity.
+  1076→
+  1077→The relationships between these entities are structured as follows: each
+  1078→Facility has many Users, Donors, Storage Units, Blood Units, Internal
+  1079→Requests, and may create many Network Requests and submit many Network
+  1080→Responses. Each Blood Unit belongs to one Facility and one Storage Unit,
+  1081→references one Donor, and may be linked to one Internal Request or one
+  1082→Network Response. Each Network Request belongs to one Facility and may
+  1083→have many Network Responses. These relationships are enforced through
+  1084→foreign key constraints in the database, maintaining referential
+  1085→integrity across all tables.
+  1086→
+  1087→3.3.3 User Interface Design
+  1088→
+  1089→The user interface of the Cloud-Based Blood Bank Management System is
+  1090→designed around the principles of role-based visibility, minimal
+  1091→navigation depth, and clarity under time pressure. Following the
+  1092→Technology Acceptance Model framework applied in Chapter Two, every
+  1093→interface decision was guided by the objectives of maximising perceived
+  1094→usefulness and perceived ease of use for blood bank staff working in
+  1095→busy clinical environments.
+  1096→
+  1097→Login Page
+  1098→
+  1099→The login page is the entry point to the system for all users. It
+  1100→presents a clean, minimal form with fields for email address and
+  1101→password, alongside the system name. Upon successful authentication, the
+  1102→server identifies the user's role and redirects them to the appropriate
+  1103→role-based dashboard. Failed login attempts are rate-limited to prevent
+  1104→brute-force attacks.
+  1105→
+  1106→Role-Based Dashboard
+  1107→
+  1108→Each authenticated user lands on a dashboard personalised to their role.
+  1109→The Blood Bank Officer dashboard displays the most operationally
+  1110→critical information at a glance: a summary of current blood stock by
+  1111→group and Rhesus factor with indicators for low stock levels, a list of
+  1112→units expiring within the alert threshold, pending internal blood
+  1113→requests awaiting processing, and open network requests requiring
+  1114→attention. The Hospital Administrator dashboard prioritises
+  1115→facility-level overview reports and staff management. Nurses and doctors
+  1116→see a simplified view focused on submitting and tracking their blood
+  1117→requests.
+  1118→
+  1119→Blood Inventory Page
+  1120→
+  1121→The inventory page presents a searchable and filterable list of all
+  1122→blood units registered at the facility. Staff can filter by blood group,
+  1123→Rhesus factor, component type, status, and expiry date range. Each unit
+  1124→row displays its key details and current status. Blood bank officers can
+  1125→add new units through a clearly labelled button that opens a structured
+  1126→data entry form with server-side validation to prevent incomplete
+  1127→records.
+  1128→
+  1129→Network Request Page
+  1130→
+  1131→The network request page is the interface through which a blood bank
+  1132→officer initiates a broadcast request. The form captures blood group,
+  1133→Rhesus factor, quantity, urgency level, and an optional note to
+  1134→responding facilities. Once submitted, the page transitions to a live
+  1135→responses view where incoming responses from other registered facilities
+  1136→appear as they are submitted, showing the responding facility's name,
+  1137→location, the offered unit's details, and a selection button. This
+  1138→real-time response view is the primary interface through which the
+  1139→broadcast-and-response workflow is experienced by the requesting
+  1140→facility.
+  1141→
+  1142→Reports Page
+  1143→
+  1144→The reports page allows hospital administrators and blood bank officers
+  1145→to generate and export inventory and usage reports. Users select a
+  1146→reporting period and report type, and the system generates a summary
+  1147→showing stock levels, units issued, units expired or discarded, and
+  1148→network request activity. Reports can be printed or exported for
+  1149→submission to management or regulatory bodies.
+  1150→
+  1151→3.3.4 Security Considerations
+  1152→
+  1153→Security is a foundational concern in the design of the Cloud-Based
+  1154→Blood Bank Management System, given that the system processes sensitive
+  1155→personal data belonging to blood donors. The following security measures
+  1156→are incorporated into the system design:
+  1157→
+  1158→Authentication and Session Management
+  1159→
+  1160→All users authenticate using an email address and password. Passwords
+  1161→are hashed using bcrypt before storage in the database, ensuring that
+  1162→plaintext passwords are never stored. Upon successful login, the server
+  1163→issues a session token that the browser stores securely. Sessions expire
+  1164→after a defined period of inactivity, requiring the user to
+  1165→re-authenticate.
+  1166→
+  1167→Role-Based Access Control
+  1168→
+  1169→Every API endpoint on the application server enforces role-based
+  1170→permission checks before processing a request. A nurse or doctor can
+  1171→submit a blood request but cannot access inventory management or donor
+  1172→records. A laboratory technician can update blood unit screening results
+  1173→but cannot approve or issue a unit. A blood bank officer can manage
+  1174→inventory, process requests, and interact with the network request
+  1175→workflow. A hospital administrator can manage staff accounts and view
+  1176→reports but cannot modify blood unit records. These role boundaries are
+  1177→enforced at the server level and cannot be bypassed through client-side
+  1178→manipulation.
+  1179→
+  1180→Data Encryption in Transit
+  1181→
+  1182→All communication between the user's browser and the application server
+  1183→is encrypted using HTTPS with TLS 1.2 or higher. This protects blood
+  1184→unit data, donor personal information, and authentication credentials
+  1185→from interception during transmission. The system will not serve content
+  1186→over unencrypted HTTP connections.
+  1187→
+  1188→Input Validation and SQL Injection Prevention
+  1189→
+  1190→All user-submitted data is validated on both the client side and the
+  1191→server side before processing. The Django ORM is used exclusively for
+  1192→database queries, which parameterises all inputs and provides built-in
+  1193→protection against SQL injection attacks. Input fields are constrained
+  1194→to their expected data types and formats, with server-side rejection of
+  1195→any input that does not conform to defined validation rules.
+  1196→
+  1197→Audit Trail
+  1198→
+  1199→All significant data modifications, including the creation and status
+  1200→changes of blood units, donor records, blood requests, and network
+  1201→requests, are recorded in the Audit Logs table. Each entry captures the
+  1202→user, action, affected record, timestamp, and IP address. Audit records
+  1203→are write-once and are not modifiable or deletable by any user role,
+  1204→ensuring a tamper-resistant record of all system activity.
+  1205→
+  1206→Compliance with Ghana's Data Protection Act 2012
+  1207→
+  1208→The system is designed to comply with Ghana's Data Protection Act, 2012
+  1209→(Act 843). Donor registration forms include explicit consent
+  1210→acknowledgement for the recording and processing of personal health
+  1211→data. Personal data is collected only for the purposes of blood bank
+  1212→operations and is not shared beyond the registered healthcare facilities
+  1213→on the network without additional explicit consent. These measures
+  1214→collectively ensure that the system fulfils its legal obligations under
+  1215→Ghanaian law.
+  1216→
+  1217→3.4 Conclusion
+  1218→
+  1219→This chapter presented the complete system specification and design of
+  1220→the Cloud-Based Blood Bank Management System. The Agile methodology was
+  1221→adopted for development, structured across four iterative sprints to
+  1222→allow the system scope to evolve in response to ongoing research
+  1223→findings and supervisor guidance. The requirements analysis, grounded in
+  1224→the project's primary survey research and field interview, produced
+  1225→twenty functional requirements and ten non-functional requirements
+  1226→covering inventory management, expiry monitoring, internal and
+  1227→cross-facility blood requests, role-based access, reporting, and
+  1228→security.
+  1229→
+  1230→The stakeholder analysis identified six distinct user roles with clearly
+  1231→defined system interactions. Ten use cases were documented to describe
+  1232→the core workflows the system is built to support, with the broadcast
+  1233→network request workflow representing the system's most significant
+  1234→functional contribution to existing blood management practice in Ghana.
+  1235→The system design presented a three-tier cloud architecture, a
+  1236→relational database schema covering nine primary entities, a
+  1237→TAM-informed user interface design built around role-based dashboards
+  1238→and minimal navigation depth, and a comprehensive security framework
+  1239→compliant with Ghana's Data Protection Act 2012.
+  1240→
+  1241→Together, these specifications and designs form the complete technical
+  1242→blueprint for the system whose implementation and testing are described
+  1243→in Chapter Four.
+  1244→
+  1245→References
+  1246→
+  1247→Abdulai, A., et al. (2020). Challenges of blood transfusion services in
+  1248→resource-limited settings. Journal of Blood Medicine.
+  1249→
+  1250→Adokiya, M. N., et al. (2015). Evaluation of the Lightwave Health
+  1251→Information Management System in Ghanaian teaching hospitals.
+  1252→
+  1253→Agrawal, A., et al. (2021). Digital transformation in blood bank
+  1254→management: Challenges and opportunities. Transfusion Medicine Reviews.
+  1255→
+  1256→Alajo Community Clinic. (2026, June 15). Interview with administrative
+  1257→staff member on blood referral practices [Personal communication].
+  1258→
+  1259→Bolton-Maggs, P. H., et al. (2012). Serious hazards of transfusion: A
+  1260→decade of UK surveillance. SHOT Annual Report.
+  1261→
+  1262→Daniels, G., and Bromilow, I. (2014). Essential guide to blood groups
+  1263→(3rd ed.). Wiley-Blackwell.
+  1264→
+  1265→Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and
+  1266→user acceptance of information technology. MIS Quarterly, 13(3),
+  1267→319-340.
+  1268→
+  1269→Dumont, L. J., et al. (2015). Blood inventory management and wastage
+  1270→reduction strategies. Vox Sanguinis.
+  1271→
+  1272→Emmanuel, J. C., et al. (2021). Strengthening blood transfusion services
+  1273→in sub-Saharan Africa. African Journal of Laboratory Medicine.
+  1274→
+  1275→Healthcare Facility Blood Management Survey. (2026, June 15). Survey
+  1276→responses from healthcare professionals in Ghana [Unpublished raw data].
+  1277→Ghana Communication Technology University.
+  1278→
+  1279→Holden, R. J., and Karsh, B. T. (2010). The technology acceptance model:
+  1280→Its past and its future in health care. Journal of Biomedical
+  1281→Informatics, 43(1), 159-172.
+  1282→
+  1283→Karuri, J., et al. (2014). DHIS2: The tool to improve health data demand
+  1284→and use in Kenya. Journal of Health Informatics in Developing Countries.
+  1285→
+  1286→Kassebaum, N. J., et al. (2016). The global burden of anaemia.
+  1287→Hematology/Oncology Clinics of North America.
+  1288→
+  1289→National Blood Service Ghana. (2023). Annual report on blood collection
+  1290→and national supply. Ministry of Health, Ghana.
+  1291→
+  1292→Olarewaju, S. O., et al. (2020). Blood bank management challenges in
+  1293→developing countries: A systematic review. International Journal of
+  1294→Health Sciences.
+  1295→
+  1296→Sommerville, I. (2016). Software engineering (10th ed.). Pearson
+  1297→Education.
+  1298→
+  1299→Stainsby, D., et al. (2006). Serious hazards of transfusion: A decade of
+  1300→hemovigilance in the UK. Transfusion Medicine Reviews, 20(4), 273-282.
+  1301→
+  1302→Venkatesh, V., and Davis, F. D. (2000). A theoretical extension of the
+  1303→technology acceptance model: Four longitudinal field studies. Management
+  1304→Science, 46(2), 186-204.
+  1305→
+  1306→World Health Organization. (2021). Blood safety and availability: Key
+  1307→facts. WHO.
+  1308→https://www.who.int/news-room/fact-sheets/detail/blood-safety-and-availability
+  1309→
+  1310→World Health Organization [WHO]. (2022). Global status report on blood
+  1311→safety and availability. WHO.
+  1312→
