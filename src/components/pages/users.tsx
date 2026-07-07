@@ -8,12 +8,14 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { PageHeader, EmptyState, StatCard } from '@/components/shared'
 import { ROLE_LABELS, ROLE_BADGES } from '@/lib/auth-constants'
 import { statusColor, formatDate } from '@/lib/ui'
 import { toast } from 'sonner'
-import { Plus, Users, Shield, Building2, Check, X } from 'lucide-react'
+import { Plus, Users, Shield, Building2, Check, X, MoreHorizontal, Pencil, Trash2, Power, KeyRound } from 'lucide-react'
 
 const ROLES = [
   { value: 'BBO', label: 'Blood Bank Officer' },
@@ -27,6 +29,8 @@ export function UsersPage() {
   const [users, setUsers] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [addOpen, setAddOpen] = useState(false)
+  const [editUser, setEditUser] = useState<any | null>(null)
+  const [deleteUser, setDeleteUser] = useState<any | null>(null)
   const isAdmin = user?.role === 'SYS_ADMIN'
 
   const load = useCallback(async () => {
@@ -42,14 +46,30 @@ export function UsersPage() {
   const activeCount = users.filter(u => u.status === 'Active').length
   const byRole = ROLES.map(r => ({ ...r, count: users.filter(u => u.role === r.value).length }))
 
+  async function handleToggleStatus(u: any) {
+    const newStatus = u.status === 'Active' ? 'Disabled' : 'Active'
+    const res = await fetch(`/api/users/${u.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus }),
+    })
+    if (!res.ok) {
+      const data = await res.json()
+      toast.error(data.error ?? 'Failed to update status')
+      return
+    }
+    toast.success(`Account ${newStatus === 'Active' ? 'enabled' : 'disabled'}`)
+    load()
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader
         title={isAdmin ? 'User Accounts' : 'Staff Accounts'}
         description={
           isAdmin
-            ? 'Manage all user accounts across the BBMS platform'
-            : 'Manage staff accounts at your facility'
+            ? 'Manage all user accounts across the BBMS platform — create, edit, disable, or delete'
+            : 'Manage staff accounts at your facility — create, edit, disable, or delete'
         }
         actions={<Button onClick={() => setAddOpen(true)} className="bg-rose-600 hover:bg-rose-700"><Plus className="w-4 h-4 mr-2" /> Add User</Button>}
       />
@@ -92,11 +112,12 @@ export function UsersPage() {
                     {isAdmin && <TableHead className="hidden md:table-cell">Facility</TableHead>}
                     <TableHead className="hidden md:table-cell">Created</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {users.map(u => (
-                    <TableRow key={u.id}>
+                    <TableRow key={u.id} className={u.status === 'Disabled' ? 'opacity-60' : ''}>
                       <TableCell className="text-sm font-medium">{u.fullName}</TableCell>
                       <TableCell className="text-xs text-slate-600">{u.email}</TableCell>
                       <TableCell>
@@ -106,6 +127,32 @@ export function UsersPage() {
                       <TableCell className="hidden md:table-cell text-xs text-slate-500">{formatDate(u.createdAt)}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className={statusColor(u.status)}>{u.status}</Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button size="icon" variant="ghost" className="h-8 w-8"><MoreHorizontal className="w-4 h-4" /></Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-44">
+                            <DropdownMenuItem onClick={() => setEditUser(u)}>
+                              <Pencil className="w-4 h-4 mr-2" /> Edit Account
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setEditUser({ ...u, _resetPassword: true })}>
+                              <KeyRound className="w-4 h-4 mr-2" /> Reset Password
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleToggleStatus(u)}>
+                              <Power className="w-4 h-4 mr-2" />
+                              {u.status === 'Active' ? 'Disable Account' : 'Enable Account'}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => setDeleteUser(u)}
+                              className="text-rose-600 focus:text-rose-700 focus:bg-rose-50"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" /> Delete Account
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -117,6 +164,23 @@ export function UsersPage() {
       </Card>
 
       <AddUserDialog open={addOpen} onOpenChange={setAddOpen} onSuccess={() => { load(); toast.success('User created'); setAddOpen(false) }} isAdmin={isAdmin} />
+
+      {editUser && (
+        <EditUserDialog
+          user={editUser}
+          isAdmin={isAdmin}
+          onClose={() => setEditUser(null)}
+          onSuccess={() => { load(); setEditUser(null) }}
+        />
+      )}
+
+      {deleteUser && (
+        <DeleteUserDialog
+          user={deleteUser}
+          onClose={() => setDeleteUser(null)}
+          onSuccess={() => { load(); setDeleteUser(null) }}
+        />
+      )}
     </div>
   )
 }
@@ -182,9 +246,10 @@ function AddUserDialog({ open, onOpenChange, onSuccess, isAdmin }: { open: boole
             {isAdmin && (
               <div>
                 <Label>Facility</Label>
-                <Select value={form.facilityId} onValueChange={(v) => setForm({ ...form, facilityId: v })}>
-                  <SelectTrigger><SelectValue placeholder="Auto (your facility)" /></SelectTrigger>
+                <Select value={form.facilityId || 'auto'} onValueChange={(v) => setForm({ ...form, facilityId: v === 'auto' ? '' : v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="auto">Auto (your facility)</SelectItem>
                     {facilities.map(f => <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
@@ -198,5 +263,196 @@ function AddUserDialog({ open, onOpenChange, onSuccess, isAdmin }: { open: boole
         </form>
       </DialogContent>
     </Dialog>
+  )
+}
+
+function EditUserDialog({ user, isAdmin, onClose, onSuccess }: {
+  user: any
+  isAdmin: boolean
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const isPasswordReset = !!user._resetPassword
+  const [form, setForm] = useState({
+    fullName: user.fullName ?? '',
+    email: user.email ?? '',
+    role: user.role ?? 'BBO',
+    status: user.status ?? 'Active',
+    facilityId: (user.facilityId ?? '') as string,
+    password: '',
+  })
+  const [facilities, setFacilities] = useState<any[]>([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetch('/api/facilities').then(r => r.json()).then(d => setFacilities((d.facilities ?? []).filter((f: any) => f.name !== 'BBMS Platform Office')))
+    }
+  }, [isAdmin])
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    const payload: any = {}
+    if (!isPasswordReset) {
+      if (form.fullName && form.fullName !== user.fullName) payload.fullName = form.fullName
+      if (form.email && form.email !== user.email) payload.email = form.email
+      if (form.role && form.role !== user.role) payload.role = form.role
+      if (form.status && form.status !== user.status) payload.status = form.status
+      if (isAdmin && form.facilityId && form.facilityId !== user.facilityId) payload.facilityId = form.facilityId
+    }
+    if (form.password) payload.password = form.password
+
+    if (Object.keys(payload).length === 0) {
+      toast.info('No changes to save')
+      setLoading(false)
+      onClose()
+      return
+    }
+
+    const res = await fetch(`/api/users/${user.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+    setLoading(false)
+    if (!res.ok) {
+      const data = await res.json()
+      toast.error(data.error ?? 'Failed to update user')
+      return
+    }
+    toast.success(isPasswordReset ? 'Password reset successfully' : 'Account updated successfully')
+    onSuccess()
+  }
+
+  return (
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            {isPasswordReset ? <KeyRound className="w-5 h-5 text-amber-600" /> : <Pencil className="w-5 h-5 text-rose-600" />}
+            {isPasswordReset ? 'Reset Password' : 'Edit User Account'}
+          </DialogTitle>
+          <DialogDescription>
+            {isPasswordReset
+              ? `Set a new password for ${user.fullName}`
+              : `Update details for ${user.fullName} (${user.email})`}
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {!isPasswordReset && (
+            <>
+              <div>
+                <Label>Full Name *</Label>
+                <Input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} required />
+              </div>
+              <div>
+                <Label>Email *</Label>
+                <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>Role</Label>
+                  <Select value={form.role} onValueChange={(v) => setForm({ ...form, role: v })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {ROLES.map(r => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Status</Label>
+                  <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Active">Active</SelectItem>
+                      <SelectItem value="Disabled">Disabled</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              {isAdmin && (
+                <div>
+                  <Label>Facility</Label>
+                  <Select value={form.facilityId || 'keep'} onValueChange={(v) => setForm({ ...form, facilityId: v === 'keep' ? '' : v })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="keep">Keep current facility</SelectItem>
+                      {facilities.map(f => <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </>
+          )}
+          <div>
+            <Label>{isPasswordReset ? 'New Password *' : 'Reset Password (optional)'}</Label>
+            <Input
+              type="password"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              required={isPasswordReset}
+              minLength={6}
+              placeholder={isPasswordReset ? 'Minimum 6 characters' : 'Leave blank to keep current password'}
+            />
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+            <Button type="submit" disabled={loading} className="bg-rose-600 hover:bg-rose-700">
+              {loading ? 'Saving...' : isPasswordReset ? 'Reset Password' : 'Save Changes'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function DeleteUserDialog({ user, onClose, onSuccess }: {
+  user: any
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const [loading, setLoading] = useState(false)
+
+  async function handleDelete() {
+    setLoading(true)
+    const res = await fetch(`/api/users/${user.id}`, { method: 'DELETE' })
+    setLoading(false)
+    if (!res.ok) {
+      const data = await res.json()
+      toast.error(data.error ?? 'Failed to delete user')
+      onClose()
+      return
+    }
+    toast.success('User account deleted')
+    onSuccess()
+  }
+
+  return (
+    <AlertDialog open onOpenChange={onClose}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-2">
+            <Trash2 className="w-5 h-5 text-rose-600" /> Delete User Account?
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            You are about to permanently delete <strong>{user.fullName}</strong> ({user.email}). This action cannot be undone.
+            <br /><br />
+            If the user has registered blood units, submitted requests, or audit log entries, deletion will be blocked — disable the account instead to preserve data integrity.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={(e) => { e.preventDefault(); handleDelete() }}
+            disabled={loading}
+            className="bg-rose-600 hover:bg-rose-700 focus:ring-rose-600"
+          >
+            {loading ? 'Deleting...' : 'Yes, Delete Permanently'}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
