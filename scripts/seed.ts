@@ -1,6 +1,6 @@
 import { db } from '../src/lib/db'
-import { hashPassword } from '../src/lib/auth'
-import { facilityCodeFromName } from '../src/lib/audit'
+import { hashPassword } from './hash'
+import { facilityCodeFromName } from './audit-helpers'
 
 const FACILITIES = [
   { name: 'Korle Bu Teaching Hospital', type: 'Teaching Hospital', location: 'Accra', region: 'Greater Accra', contactPhone: '+233302665321', contactEmail: 'admin@korlebu.gov.gh' },

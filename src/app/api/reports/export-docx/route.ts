@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { isExpired, isNearExpiry } from '@/lib/audit'
+import { writeFile, readFile, unlink, mkdir } from 'fs/promises'
+import { existsSync } from 'fs'
+import { join } from 'path'
+import { tmpdir } from 'os'
+import { exec } from 'child_process'
+import { promisify } from 'util'
+
+const execAsync = promisify(exec)
 
 export async function GET(req: NextRequest) {
   const session = await getSession()
@@ -9,11 +17,13 @@ export async function GET(req: NextRequest) {
   if (!['HOSP_ADMIN', 'BBO', 'SYS_ADMIN'].includes(session.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
-  const { searchParams } = new URL(req.url)
-  const from = searchParams.get('from')
-  const to = searchParams.get('to')
-  const facilityId = session.role === 'SYS_ADMIN' ? (searchParams.get('facilityId') || undefined) : session.facilityId
 
+  const { searchParams } = new URL(req.url)
+  const from = searchParams.get('from') || undefined
+  const to = searchParams.get('to') || undefined
+  const facilityId = session.role === 'SYS_ADMIN' ? (searchParams.get('facilityId') || undefined) : session.facilityId!
+
+  // Build the same data structure
   const dateFilter: any = {}
   if (from) dateFilter.gte = new Date(from)
   if (to) dateFilter.lte = new Date(to)
@@ -21,17 +31,12 @@ export async function GET(req: NextRequest) {
   const where: any = {}
   if (facilityId) where.facilityId = facilityId
 
-  const allUnits = await db.bloodUnit.findMany({
-    where,
-    include: { donor: { select: { fullName: true } } },
-  })
-
+  const allUnits = await db.bloodUnit.findMany({ where, include: { donor: { select: { fullName: true } } } })
   const availableUnits = allUnits.filter(u => u.status === 'Available')
   const expiredUnits = allUnits.filter(u => u.status === 'Expired' || isExpired(u.expiryDate))
   const nearExpiry = availableUnits.filter(u => isNearExpiry(u.expiryDate))
 
-  // Stock by blood group (with sub-status)
-  const stockByGroup: Record<string, { available: number; total: number; expired: number; reserved: number; issued: number }> = {}
+  const stockByGroup: Record<string, any> = {}
   for (const g of ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']) {
     const groupUnits = allUnits.filter(u => u.bloodGroup === g)
     stockByGroup[g] = {
@@ -43,41 +48,33 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // Component distribution
   const componentDist: Record<string, number> = {}
   for (const u of availableUnits) {
     componentDist[u.componentType] = (componentDist[u.componentType] ?? 0) + 1
   }
 
-  // Internal requests
   const internalWhere: any = {}
   if (facilityId) internalWhere.facilityId = facilityId
   if (Object.keys(dateFilter).length) internalWhere.createdAt = dateFilter
   const internalRequests = await db.internalRequest.findMany({ where: internalWhere })
   const internalByStatus: Record<string, number> = {}
   const internalByUrgency: Record<string, number> = {}
-  const internalByWard: Record<string, number> = {}
   for (const r of internalRequests) {
     internalByStatus[r.status] = (internalByStatus[r.status] ?? 0) + 1
     internalByUrgency[r.urgency] = (internalByUrgency[r.urgency] ?? 0) + 1
-    if (r.ward) internalByWard[r.ward] = (internalByWard[r.ward] ?? 0) + 1
   }
 
-  // Network requests
   const networkWhere: any = {}
   if (facilityId) networkWhere.facilityId = facilityId
   if (Object.keys(dateFilter).length) networkWhere.createdAt = dateFilter
   const networkRequests = await db.networkRequest.findMany({ where: networkWhere })
   const networkByStatus: Record<string, number> = {}
-  const networkByUrgency: Record<string, number> = {}
   const networkByGroup: Record<string, number> = {}
   for (const r of networkRequests) {
     networkByStatus[r.status] = (networkByStatus[r.status] ?? 0) + 1
-    networkByUrgency[r.urgency] = (networkByUrgency[r.urgency] ?? 0) + 1
     networkByGroup[r.bloodGroup] = (networkByGroup[r.bloodGroup] ?? 0) + 1
   }
 
-  // Recent activity (last 30 audit logs)
   const auditWhere: any = {}
   if (facilityId) auditWhere.facilityId = facilityId
   const recentActivity = await db.auditLog.findMany({
@@ -87,22 +84,16 @@ export async function GET(req: NextRequest) {
     include: { user: { select: { fullName: true } } },
   })
 
-  // Storage utilization
   const storageWhere: any = {}
   if (facilityId) storageWhere.facilityId = facilityId
   const storageUnits = await db.storageUnit.findMany({
     where: storageWhere,
     include: { _count: { select: { bloodUnits: true } } },
   })
-  const storageUtilization = storageUnits.map(s => ({
-    name: s.name,
-    category: s.tempCategory,
-    used: s._count.bloodUnits,
-    capacity: s.maxCapacity,
-    utilization: s.maxCapacity ? Math.round((s._count.bloodUnits / s.maxCapacity) * 100) : 0,
-  }))
 
-  return NextResponse.json({
+  const facility = facilityId ? await db.facility.findUnique({ where: { id: facilityId }, select: { name: true, type: true, region: true } }) : null
+
+  const data = {
     summary: {
       totalUnits: allUnits.length,
       available: availableUnits.length,
@@ -114,29 +105,62 @@ export async function GET(req: NextRequest) {
     },
     stockByGroup,
     componentDist,
-    internalRequests: {
-      total: internalRequests.length,
-      byStatus: internalByStatus,
-      byUrgency: internalByUrgency,
-      byWard: internalByWard,
-    },
-    networkRequests: {
-      total: networkRequests.length,
-      byStatus: networkByStatus,
-      byUrgency: networkByUrgency,
-      byGroup: networkByGroup,
-    },
-    storageUtilization,
+    internalRequests: { total: internalRequests.length, byStatus: internalByStatus, byUrgency: internalByUrgency },
+    networkRequests: { total: networkRequests.length, byStatus: networkByStatus, byGroup: networkByGroup },
+    storageUtilization: storageUnits.map(s => ({
+      name: s.name,
+      category: s.tempCategory,
+      used: s._count.bloodUnits,
+      capacity: s.maxCapacity,
+      utilization: s.maxCapacity ? Math.round((s._count.bloodUnits / s.maxCapacity) * 100) : 0,
+    })),
     recentActivity: recentActivity.map(a => ({
       id: a.id,
       action: a.action,
       description: a.description,
       user: a.user?.fullName ?? 'System',
       entityType: a.entityType,
-      createdAt: a.createdAt,
+      createdAt: a.createdAt.toISOString(),
     })),
-    facility: facilityId ? await db.facility.findUnique({ where: { id: facilityId }, select: { name: true, type: true, region: true } }) : null,
+    facility,
     period: { from, to },
     generatedAt: new Date().toISOString(),
-  })
+  }
+
+  // Write JSON to temp file
+  const tmpDir = join(tmpdir(), 'bbms-reports')
+  if (!existsSync(tmpDir)) await mkdir(tmpDir, { recursive: true })
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8)
+  const jsonPath = join(tmpDir, `report-${id}.json`)
+  const docxPath = join(tmpDir, `report-${id}.docx`)
+  await writeFile(jsonPath, JSON.stringify(data), 'utf-8')
+
+  try {
+    const scriptPath = join(process.cwd(), 'scripts', 'generate_report_docx.py')
+    const { stderr } = await execAsync(`python3 ${scriptPath} ${jsonPath} ${docxPath}`, { timeout: 30000 })
+    if (stderr) console.error('DOCX generation stderr:', stderr)
+
+    if (!existsSync(docxPath)) {
+      return NextResponse.json({ error: 'DOCX generation failed' }, { status: 500 })
+    }
+
+    const docxBuffer = await readFile(docxPath)
+    await unlink(jsonPath).catch(() => {})
+    await unlink(docxPath).catch(() => {})
+
+    const filename = `BBMS-Report-${new Date().toISOString().split('T')[0]}.docx`
+    return new NextResponse(docxBuffer, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+        'Content-Length': docxBuffer.length.toString(),
+      },
+    })
+  } catch (e) {
+    console.error('DOCX export error', e)
+    await unlink(jsonPath).catch(() => {})
+    await unlink(docxPath).catch(() => {})
+    return NextResponse.json({ error: 'Failed to generate DOCX' }, { status: 500 })
+  }
 }

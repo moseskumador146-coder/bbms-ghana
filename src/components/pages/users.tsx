@@ -86,9 +86,9 @@ export function UsersPage() {
         <CardContent className="p-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {byRole.map(r => (
-              <div key={r.value} className="rounded-md border border-slate-200 p-3">
-                <div className="text-xs text-slate-500">{r.label}</div>
-                <div className="text-2xl font-bold text-slate-900 mt-1">{r.count}</div>
+              <div key={r.value} className="rounded-md border border-border p-3">
+                <div className="text-xs text-muted-foreground">{r.label}</div>
+                <div className="text-2xl font-bold text-foreground mt-1">{r.count}</div>
               </div>
             ))}
           </div>
@@ -98,7 +98,7 @@ export function UsersPage() {
       <Card>
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-8 text-center text-sm text-slate-500">Loading...</div>
+            <div className="p-8 text-center text-sm text-muted-foreground">Loading...</div>
           ) : users.length === 0 ? (
             <EmptyState title="No users found" icon={Users} />
           ) : (
@@ -119,12 +119,12 @@ export function UsersPage() {
                   {users.map(u => (
                     <TableRow key={u.id} className={u.status === 'Disabled' ? 'opacity-60' : ''}>
                       <TableCell className="text-sm font-medium">{u.fullName}</TableCell>
-                      <TableCell className="text-xs text-slate-600">{u.email}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground">{u.email}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className={ROLE_BADGES[u.role]}>{ROLE_LABELS[u.role]}</Badge>
                       </TableCell>
                       {isAdmin && <TableCell className="hidden md:table-cell text-xs">{u.facility?.name ?? '—'}</TableCell>}
-                      <TableCell className="hidden md:table-cell text-xs text-slate-500">{formatDate(u.createdAt)}</TableCell>
+                      <TableCell className="hidden md:table-cell text-xs text-muted-foreground">{formatDate(u.createdAt)}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className={statusColor(u.status)}>{u.status}</Badge>
                       </TableCell>

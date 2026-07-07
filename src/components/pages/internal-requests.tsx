@@ -75,7 +75,7 @@ export function InternalRequestsPage() {
           <Card>
             <CardContent className="p-0">
               {loading ? (
-                <div className="p-8 text-center text-sm text-slate-500">Loading...</div>
+                <div className="p-8 text-center text-sm text-muted-foreground">Loading...</div>
               ) : active.length === 0 ? (
                 <EmptyState title="No active requests" description="Pending and approved requests will appear here." icon={Clock} />
               ) : (
@@ -89,7 +89,7 @@ export function InternalRequestsPage() {
           <Card>
             <CardContent className="p-0">
               {loading ? (
-                <div className="p-8 text-center text-sm text-slate-500">Loading...</div>
+                <div className="p-8 text-center text-sm text-muted-foreground">Loading...</div>
               ) : completed.length === 0 ? (
                 <EmptyState title="No completed requests" icon={CheckCircle2} />
               ) : (
@@ -138,28 +138,28 @@ function RequestList({ requests, canProcess, onProcess }: { requests: any[]; can
           {requests.map(r => (
             <TableRow key={r.id}>
               <TableCell>
-                <div className="text-sm font-medium text-slate-900">{r.patientRef}</div>
-                {r.patientName && <div className="text-xs text-slate-500">{r.patientName}</div>}
+                <div className="text-sm font-medium text-foreground">{r.patientRef}</div>
+                {r.patientName && <div className="text-xs text-muted-foreground">{r.patientName}</div>}
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <div className={`w-7 h-7 rounded ${BLOOD_GROUP_COLORS[r.bloodGroup]} text-white text-[10px] font-bold flex items-center justify-center`}>
                     {r.bloodGroup}
                   </div>
-                  {r.componentType && <span className="text-xs text-slate-600 hidden lg:inline">{r.componentType}</span>}
+                  {r.componentType && <span className="text-xs text-muted-foreground hidden lg:inline">{r.componentType}</span>}
                 </div>
               </TableCell>
               <TableCell className="hidden md:table-cell text-sm">{r.quantity}</TableCell>
-              <TableCell className="hidden md:table-cell text-xs text-slate-600">{r.ward ?? '—'}</TableCell>
+              <TableCell className="hidden md:table-cell text-xs text-muted-foreground">{r.ward ?? '—'}</TableCell>
               <TableCell>
                 <Badge variant="outline" className={
                   r.urgency === 'Emergency' ? 'border-rose-300 text-rose-700 bg-rose-50' :
                   r.urgency === 'Urgent' ? 'border-amber-300 text-amber-700 bg-amber-50' :
-                  'border-slate-200 text-slate-700 bg-slate-50'
+                  'border-border text-foreground bg-background'
                 }>{r.urgency}</Badge>
               </TableCell>
               <TableCell className="hidden lg:table-cell text-xs">{r.requestedBy?.fullName ?? '—'}</TableCell>
-              <TableCell className="text-xs text-slate-500">{timeAgo(r.createdAt)}</TableCell>
+              <TableCell className="text-xs text-muted-foreground">{timeAgo(r.createdAt)}</TableCell>
               <TableCell>
                 <Badge variant="outline" className={statusColor(r.status)}>{r.status}</Badge>
               </TableCell>
@@ -170,7 +170,7 @@ function RequestList({ requests, canProcess, onProcess }: { requests: any[]; can
                   </Button>
                 )}
                 {r.issuedUnit && (
-                  <span className="text-xs text-slate-500 font-mono">{r.issuedUnit.unitCode}</span>
+                  <span className="text-xs text-muted-foreground font-mono">{r.issuedUnit.unitCode}</span>
                 )}
               </TableCell>
             </TableRow>
@@ -338,11 +338,11 @@ function ProcessDialog({ request, onClose, onSuccess }: { request: any; onClose:
         </DialogHeader>
         <div className="space-y-4">
           {loading ? (
-            <div className="text-sm text-slate-500 text-center py-4">Loading available units...</div>
+            <div className="text-sm text-muted-foreground text-center py-4">Loading available units...</div>
           ) : (
             <>
-              <div className="bg-slate-50 border border-slate-200 rounded-md p-3 text-sm">
-                <div className="font-medium text-slate-900">{availableUnits.length} compatible {request.bloodGroup} unit(s) available</div>
+              <div className="bg-background border border-border rounded-md p-3 text-sm">
+                <div className="font-medium text-foreground">{availableUnits.length} compatible {request.bloodGroup} unit(s) available</div>
                 {availableUnits.length === 0 && (
                   <div className="text-amber-700 text-xs mt-1 flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" /> No compatible units in inventory. Consider broadcasting a network request.
@@ -353,13 +353,13 @@ function ProcessDialog({ request, onClose, onSuccess }: { request: any; onClose:
               <div>
                 <Label>Action</Label>
                 <div className="grid grid-cols-3 gap-2 mt-1">
-                  <button type="button" onClick={() => setAction('issue')} className={`p-3 rounded-md border text-xs font-medium ${action === 'issue' ? 'border-emerald-300 bg-emerald-50 text-emerald-700' : 'border-slate-200 hover:bg-slate-50'}`}>
+                  <button type="button" onClick={() => setAction('issue')} className={`p-3 rounded-md border text-xs font-medium ${action === 'issue' ? 'border-emerald-300 bg-emerald-50 text-emerald-700' : 'border-border hover:bg-background'}`}>
                     <Check className="w-4 h-4 mx-auto mb-1" /> Issue Unit
                   </button>
-                  <button type="button" onClick={() => setAction('approve')} className={`p-3 rounded-md border text-xs font-medium ${action === 'approve' ? 'border-sky-300 bg-sky-50 text-sky-700' : 'border-slate-200 hover:bg-slate-50'}`}>
+                  <button type="button" onClick={() => setAction('approve')} className={`p-3 rounded-md border text-xs font-medium ${action === 'approve' ? 'border-sky-300 bg-sky-50 text-sky-700' : 'border-border hover:bg-background'}`}>
                     <Check className="w-4 h-4 mx-auto mb-1" /> Approve Only
                   </button>
-                  <button type="button" onClick={() => setAction('reject')} className={`p-3 rounded-md border text-xs font-medium ${action === 'reject' ? 'border-rose-300 bg-rose-50 text-rose-700' : 'border-slate-200 hover:bg-slate-50'}`}>
+                  <button type="button" onClick={() => setAction('reject')} className={`p-3 rounded-md border text-xs font-medium ${action === 'reject' ? 'border-rose-300 bg-rose-50 text-rose-700' : 'border-border hover:bg-background'}`}>
                     <X className="w-4 h-4 mx-auto mb-1" /> Reject
                   </button>
                 </div>

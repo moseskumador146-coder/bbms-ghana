@@ -43,9 +43,9 @@ export function DashboardPage() {
   if (loading || !data) {
     return (
       <div className="space-y-6">
-        <div className="h-8 w-48 bg-slate-200 rounded animate-pulse" />
+        <div className="h-8 w-48 bg-muted rounded animate-pulse" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-slate-100 rounded-lg animate-pulse" />)}
+          {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-muted rounded-lg animate-pulse" />)}
         </div>
       </div>
     )
@@ -80,29 +80,29 @@ function FacilityDashboard({ data, navigate, userName }: { data: DashboardData; 
       {(stats.lowStockGroups?.length > 0 || stats.expiredUnits > 0) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {stats.lowStockGroups?.length > 0 && (
-            <div className="rounded-lg bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+            <div className="rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 p-4 flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-semibold text-amber-800">Low Stock Alert</div>
-                <div className="text-xs text-amber-700 mt-1">
+                <div className="text-sm font-semibold text-amber-800 dark:text-amber-200">Low Stock Alert</div>
+                <div className="text-xs text-amber-700 dark:text-amber-300 mt-1">
                   Blood groups below threshold ({'< 5 units'}): {stats.lowStockGroups.join(', ')}
                 </div>
               </div>
-              <Button size="sm" variant="outline" className="border-amber-300 text-amber-700 hover:bg-amber-100" onClick={() => navigate('network-requests')}>
+              <Button size="sm" variant="outline" className="border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/50" onClick={() => navigate('network-requests')}>
                 Broadcast
               </Button>
             </div>
           )}
           {stats.expiredUnits > 0 && (
-            <div className="rounded-lg bg-rose-50 border border-rose-200 p-4 flex items-start gap-3">
-              <XCircle className="w-5 h-5 text-rose-600 mt-0.5 shrink-0" />
+            <div className="rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 p-4 flex items-start gap-3">
+              <XCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 mt-0.5 shrink-0" />
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-semibold text-rose-800">Expired Units</div>
-                <div className="text-xs text-rose-700 mt-1">
+                <div className="text-sm font-semibold text-rose-800 dark:text-rose-200">Expired Units</div>
+                <div className="text-xs text-rose-700 dark:text-rose-300 mt-1">
                   {stats.expiredUnits} units have expired and require disposal
                 </div>
               </div>
-              <Button size="sm" variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100" onClick={() => navigate('alerts')}>
+              <Button size="sm" variant="outline" className="border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50" onClick={() => navigate('alerts')}>
                 Review
               </Button>
             </div>
@@ -126,15 +126,15 @@ function FacilityDashboard({ data, navigate, userName }: { data: DashboardData; 
                 <button
                   key={group}
                   onClick={() => navigate('blood-units')}
-                  className="rounded-lg border border-slate-200 p-3 hover:border-slate-300 hover:shadow-sm transition-all text-left"
+                  className="rounded-lg border border-border p-3 hover:border-border hover:shadow-sm transition-all text-left"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <div className={`w-7 h-7 rounded-md ${BLOOD_GROUP_COLORS[group]} text-white text-xs font-bold flex items-center justify-center`}>
                       {group}
                     </div>
-                    <span className="text-xs text-slate-500">units</span>
+                    <span className="text-xs text-muted-foreground">units</span>
                   </div>
-                  <div className={`text-2xl font-bold ${count === 0 ? 'text-rose-600' : (count as number) < 5 ? 'text-amber-600' : 'text-slate-900'}`}>
+                  <div className={`text-2xl font-bold ${count === 0 ? 'text-rose-600' : (count as number) < 5 ? 'text-amber-600' : 'text-foreground'}`}>
                     {count as number}
                   </div>
                   <Progress value={totalStock ? ((count as number) / Math.max(totalStock, 8)) * 100 : 0} className="h-1 mt-2" />
@@ -158,12 +158,12 @@ function FacilityDashboard({ data, navigate, userName }: { data: DashboardData; 
               ) : (
                 <div className="space-y-0">
                   {recentActivity?.map((a, i) => (
-                    <div key={a.id} className={`px-4 py-2.5 ${i !== recentActivity.length - 1 ? 'border-b border-slate-100' : ''}`}>
+                    <div key={a.id} className={`px-4 py-2.5 ${i !== recentActivity.length - 1 ? 'border-b border-border' : ''}`}>
                       <div className="flex items-start gap-2">
-                        <div className="text-[10px] text-slate-400 mt-0.5 shrink-0 w-12">{timeAgo(a.createdAt)}</div>
+                        <div className="text-[10px] text-muted-foreground/70 mt-0.5 shrink-0 w-12">{timeAgo(a.createdAt)}</div>
                         <div className="min-w-0 flex-1">
-                          <div className="text-xs text-slate-700 line-clamp-2">{a.description}</div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">{a.user}</div>
+                          <div className="text-xs text-foreground line-clamp-2">{a.description}</div>
+                          <div className="text-[10px] text-muted-foreground/70 mt-0.5">{a.user}</div>
                         </div>
                       </div>
                     </div>
@@ -200,8 +200,8 @@ function FacilityDashboard({ data, navigate, userName }: { data: DashboardData; 
                           {u.bloodGroup}
                         </div>
                         <div className="min-w-0">
-                          <div className="text-xs font-medium text-slate-700 truncate">{u.unitCode}</div>
-                          <div className="text-[10px] text-slate-500 truncate">{u.componentType}</div>
+                          <div className="text-xs font-medium text-foreground truncate">{u.unitCode}</div>
+                          <div className="text-[10px] text-muted-foreground truncate">{u.componentType}</div>
                         </div>
                       </div>
                       <Badge variant="outline" className={days <= 2 ? 'border-rose-300 text-rose-700 bg-rose-50' : 'border-amber-300 text-amber-700 bg-amber-50'}>
@@ -237,14 +237,14 @@ function FacilityDashboard({ data, navigate, userName }: { data: DashboardData; 
                         {r.bloodGroup}
                       </div>
                       <div className="min-w-0">
-                        <div className="text-xs font-medium text-slate-700 truncate">{r.patientRef}</div>
-                        <div className="text-[10px] text-slate-500 truncate">{r.ward ?? 'No ward'} · {r.quantity} unit(s)</div>
+                        <div className="text-xs font-medium text-foreground truncate">{r.patientRef}</div>
+                        <div className="text-[10px] text-muted-foreground truncate">{r.ward ?? 'No ward'} · {r.quantity} unit(s)</div>
                       </div>
                     </div>
                     <Badge variant="outline" className={
                       r.urgency === 'Emergency' ? 'border-rose-300 text-rose-700 bg-rose-50' :
                       r.urgency === 'Urgent' ? 'border-amber-300 text-amber-700 bg-amber-50' :
-                      'border-slate-200 text-slate-700 bg-slate-50'
+                      'border-border text-foreground bg-background'
                     }>
                       {r.urgency}
                     </Badge>
@@ -280,8 +280,8 @@ function FacilityDashboard({ data, navigate, userName }: { data: DashboardData; 
                       {nr.bloodGroup}
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-medium text-slate-700 truncate">{nr.facilityName}</div>
-                      <div className="text-xs text-slate-500 truncate">
+                      <div className="text-sm font-medium text-foreground truncate">{nr.facilityName}</div>
+                      <div className="text-xs text-muted-foreground truncate">
                         {nr.quantity} unit(s) · {nr.componentType ?? 'Any'} · {nr.urgency}
                       </div>
                     </div>
@@ -334,11 +334,11 @@ function SysAdminDashboard({ data, navigate }: { data: DashboardData; navigate: 
                   <div className={`w-10 h-10 rounded-md ${BLOOD_GROUP_COLORS[group]} text-white text-xs font-bold flex items-center justify-center mx-auto`}>
                     {group}
                   </div>
-                  <div className="text-sm font-bold text-slate-900 mt-1">{count as number}</div>
+                  <div className="text-sm font-bold text-foreground mt-1">{count as number}</div>
                 </div>
               ))}
               {Object.keys(groupDistribution).length === 0 && (
-                <div className="col-span-4 text-center text-xs text-slate-500 py-6">No available units</div>
+                <div className="col-span-4 text-center text-xs text-muted-foreground py-6">No available units</div>
               )}
             </div>
           </CardContent>
@@ -358,17 +358,17 @@ function SysAdminDashboard({ data, navigate }: { data: DashboardData; navigate: 
               {facilities.map(f => (
                 <div key={f.id} className="px-4 py-3 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium text-slate-900 truncate">{f.name}</div>
-                    <div className="text-xs text-slate-500">{f.type} · {f.region}</div>
+                    <div className="text-sm font-medium text-foreground truncate">{f.name}</div>
+                    <div className="text-xs text-muted-foreground">{f.type} · {f.region}</div>
                   </div>
                   <div className="flex items-center gap-4 text-xs">
                     <div className="text-center">
-                      <div className="font-semibold text-slate-900">{f.availableUnits}</div>
-                      <div className="text-[10px] text-slate-500">Available</div>
+                      <div className="font-semibold text-foreground">{f.availableUnits}</div>
+                      <div className="text-[10px] text-muted-foreground">Available</div>
                     </div>
                     <div className="text-center">
                       <div className="font-semibold text-amber-600">{f.expiredUnits}</div>
-                      <div className="text-[10px] text-slate-500">Expired</div>
+                      <div className="text-[10px] text-muted-foreground">Expired</div>
                     </div>
                     <Badge variant="outline" className={statusColor(f.status)}>{f.status}</Badge>
                   </div>

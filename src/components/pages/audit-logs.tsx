@@ -14,8 +14,8 @@ const ACTION_COLORS: Record<string, string> = {
   UPDATE: 'bg-sky-100 text-sky-700 border-sky-200',
   STATUS_CHANGE: 'bg-violet-100 text-violet-700 border-violet-200',
   DELETE: 'bg-rose-100 text-rose-700 border-rose-200',
-  LOGIN: 'bg-slate-100 text-slate-700 border-slate-200',
-  LOGOUT: 'bg-slate-100 text-slate-700 border-slate-200',
+  LOGIN: 'bg-muted text-foreground border-border',
+  LOGOUT: 'bg-muted text-foreground border-border',
 }
 
 const ENTITY_TYPES = ['Facility', 'User', 'BloodUnit', 'InternalRequest', 'NetworkRequest', 'NetworkResponse', 'Donor', 'StorageUnit']
@@ -58,7 +58,7 @@ export function AuditLogsPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="text-xs text-slate-500 ml-auto">
+            <div className="text-xs text-muted-foreground ml-auto">
               Showing {logs.length} most recent entries
             </div>
           </div>
@@ -68,7 +68,7 @@ export function AuditLogsPage() {
       <Card>
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-8 text-center text-sm text-slate-500">Loading audit logs...</div>
+            <div className="p-8 text-center text-sm text-muted-foreground">Loading audit logs...</div>
           ) : logs.length === 0 ? (
             <EmptyState title="No audit logs" icon={ScrollText} />
           ) : (
@@ -87,23 +87,23 @@ export function AuditLogsPage() {
                 <TableBody>
                   {logs.map(log => (
                     <TableRow key={log.id}>
-                      <TableCell className="text-xs text-slate-600 whitespace-nowrap">
+                      <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                         {formatDateTime(log.createdAt)}
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className={ACTION_COLORS[log.action] ?? 'border-slate-200'}>{log.action}</Badge>
+                        <Badge variant="outline" className={ACTION_COLORS[log.action] ?? 'border-border'}>{log.action}</Badge>
                       </TableCell>
-                      <TableCell className="text-xs text-slate-600">{log.entityType}</TableCell>
-                      <TableCell className="text-xs text-slate-700">{log.description}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground">{log.entityType}</TableCell>
+                      <TableCell className="text-xs text-foreground">{log.description}</TableCell>
                       <TableCell className="hidden md:table-cell text-xs">
                         {log.user ? (
                           <div className="flex items-center gap-1">
-                            <User className="w-3 h-3 text-slate-400" />
+                            <User className="w-3 h-3 text-muted-foreground/70" />
                             <span className="truncate max-w-[120px]">{log.user.fullName}</span>
                           </div>
-                        ) : <span className="text-slate-400">System</span>}
+                        ) : <span className="text-muted-foreground/70">System</span>}
                       </TableCell>
-                      <TableCell className="hidden lg:table-cell text-xs text-slate-600">
+                      <TableCell className="hidden lg:table-cell text-xs text-muted-foreground">
                         {log.facility?.name ?? '—'}
                       </TableCell>
                     </TableRow>
@@ -115,9 +115,9 @@ export function AuditLogsPage() {
         </CardContent>
       </Card>
 
-      <div className="rounded-lg bg-slate-50 border border-slate-200 p-4 flex items-start gap-3">
-        <Activity className="w-5 h-5 text-slate-600 mt-0.5 shrink-0" />
-        <div className="text-xs text-slate-700">
+      <div className="rounded-lg bg-background border border-border p-4 flex items-start gap-3">
+        <Activity className="w-5 h-5 text-muted-foreground mt-0.5 shrink-0" />
+        <div className="text-xs text-foreground">
           <div className="font-semibold mb-1">Audit Log Compliance</div>
           <p>Audit logs are write-once and cannot be modified or deleted by any user role. Logs are retained for a minimum of 12 months to support traceability and regulatory review under Ghana&apos;s Data Protection Act 2012 (Act 843).</p>
         </div>

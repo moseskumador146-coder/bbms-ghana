@@ -84,7 +84,7 @@ export function NetworkRequestsPage() {
           <Card>
             <CardContent className="p-0">
               {loading ? (
-                <div className="p-8 text-center text-sm text-slate-500">Loading...</div>
+                <div className="p-8 text-center text-sm text-muted-foreground">Loading...</div>
               ) : outgoing.length === 0 ? (
                 <EmptyState
                   title="No outgoing network requests"
@@ -107,7 +107,7 @@ export function NetworkRequestsPage() {
             <Card>
               <CardContent className="p-0">
                 {loading ? (
-                  <div className="p-8 text-center text-sm text-slate-500">Loading...</div>
+                  <div className="p-8 text-center text-sm text-muted-foreground">Loading...</div>
                 ) : incoming.length === 0 ? (
                   <EmptyState
                     title="No incoming requests"
@@ -148,7 +148,7 @@ export function NetworkRequestsPage() {
 function OutgoingRequestRow({ request, onOpen }: { request: any; onOpen: () => void }) {
   const responseCount = request.responses?.length ?? request._count?.responses ?? 0
   return (
-    <div className="px-4 py-3 hover:bg-slate-50 cursor-pointer" onClick={onOpen}>
+    <div className="px-4 py-3 hover:bg-background cursor-pointer" onClick={onOpen}>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <div className={`w-11 h-11 rounded-md ${BLOOD_GROUP_COLORS[request.bloodGroup]} text-white font-bold flex items-center justify-center shrink-0`}>
@@ -159,14 +159,14 @@ function OutgoingRequestRow({ request, onOpen }: { request: any; onOpen: () => v
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium font-mono text-slate-900">{request.requestCode}</span>
+              <span className="text-sm font-medium font-mono text-foreground">{request.requestCode}</span>
               <Badge variant="outline" className={
                 request.urgency === 'Emergency' ? 'border-rose-300 text-rose-700 bg-rose-50' :
                 request.urgency === 'Urgent' ? 'border-amber-300 text-amber-700 bg-amber-50' :
-                'border-slate-200 text-slate-700 bg-slate-50'
+                'border-border text-foreground bg-background'
               }>{request.urgency}</Badge>
             </div>
-            <div className="text-xs text-slate-500 mt-0.5 truncate">
+            <div className="text-xs text-muted-foreground mt-0.5 truncate">
               {request.componentType ?? 'Any component'} · {timeAgo(request.createdAt)} · {responseCount} response(s)
             </div>
           </div>
@@ -185,7 +185,7 @@ function OutgoingRequestRow({ request, onOpen }: { request: any; onOpen: () => v
 function IncomingRequestRow({ request, onRespond }: { request: any; onRespond: () => void }) {
   const alreadyResponded = (request.responses?.length ?? 0) > 0
   return (
-    <div className="px-4 py-3 hover:bg-slate-50">
+    <div className="px-4 py-3 hover:bg-background">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <div className={`w-11 h-11 rounded-md ${BLOOD_GROUP_COLORS[request.bloodGroup]} text-white font-bold flex items-center justify-center shrink-0`}>
@@ -196,14 +196,14 @@ function IncomingRequestRow({ request, onRespond }: { request: any; onRespond: (
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm font-medium text-slate-900">{request.facility?.name ?? 'Unknown facility'}</span>
+              <span className="text-sm font-medium text-foreground">{request.facility?.name ?? 'Unknown facility'}</span>
               <Badge variant="outline" className={
                 request.urgency === 'Emergency' ? 'border-rose-300 text-rose-700 bg-rose-50' :
                 request.urgency === 'Urgent' ? 'border-amber-300 text-amber-700 bg-amber-50' :
-                'border-slate-200 text-slate-700 bg-slate-50'
+                'border-border text-foreground bg-background'
               }>{request.urgency}</Badge>
             </div>
-            <div className="text-xs text-slate-500 mt-0.5 truncate">
+            <div className="text-xs text-muted-foreground mt-0.5 truncate">
               {request.componentType ?? 'Any component'} · {request.facility?.region} · {timeAgo(request.createdAt)}
             </div>
           </div>
@@ -459,41 +459,41 @@ function RequestDetailDialog({ request, isOutgoing, onClose, onChanged }: {
         </DialogHeader>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-          <div className="rounded-md border border-slate-200 p-2.5">
-            <div className="text-[10px] uppercase text-slate-500">Blood Group</div>
+          <div className="rounded-md border border-border p-2.5">
+            <div className="text-[10px] uppercase text-muted-foreground">Blood Group</div>
             <div className={`text-base font-bold ${BLOOD_GROUP_COLORS[request.bloodGroup].replace('bg-', 'text-').replace('-500', '-600').replace('-600', '-600')}`}>{request.bloodGroup}{request.rhesus}</div>
           </div>
-          <div className="rounded-md border border-slate-200 p-2.5">
-            <div className="text-[10px] uppercase text-slate-500">Quantity</div>
+          <div className="rounded-md border border-border p-2.5">
+            <div className="text-[10px] uppercase text-muted-foreground">Quantity</div>
             <div className="text-base font-bold">{request.quantity} unit(s)</div>
           </div>
-          <div className="rounded-md border border-slate-200 p-2.5">
-            <div className="text-[10px] uppercase text-slate-500">Urgency</div>
-            <div className={`text-base font-bold ${request.urgency === 'Emergency' ? 'text-rose-600' : request.urgency === 'Urgent' ? 'text-amber-600' : 'text-slate-700'}`}>{request.urgency}</div>
+          <div className="rounded-md border border-border p-2.5">
+            <div className="text-[10px] uppercase text-muted-foreground">Urgency</div>
+            <div className={`text-base font-bold ${request.urgency === 'Emergency' ? 'text-rose-600' : request.urgency === 'Urgent' ? 'text-amber-600' : 'text-foreground'}`}>{request.urgency}</div>
           </div>
-          <div className="rounded-md border border-slate-200 p-2.5">
-            <div className="text-[10px] uppercase text-slate-500">Status</div>
+          <div className="rounded-md border border-border p-2.5">
+            <div className="text-[10px] uppercase text-muted-foreground">Status</div>
             <Badge variant="outline" className={statusColor(request.status)}>{request.status}</Badge>
           </div>
         </div>
 
         {request.componentType && (
-          <div className="text-xs text-slate-600 mb-2"><span className="font-medium">Component:</span> {request.componentType}</div>
+          <div className="text-xs text-muted-foreground mb-2"><span className="font-medium">Component:</span> {request.componentType}</div>
         )}
         {request.patientRef && (
-          <div className="text-xs text-slate-600 mb-2"><span className="font-medium">Patient Ref:</span> {request.patientRef}</div>
+          <div className="text-xs text-muted-foreground mb-2"><span className="font-medium">Patient Ref:</span> {request.patientRef}</div>
         )}
         {request.noteToFacilities && (
-          <div className="bg-slate-50 border border-slate-200 rounded-md p-3 mb-4">
-            <div className="text-[10px] uppercase text-slate-500 mb-1 flex items-center gap-1"><MessageSquare className="w-3 h-3" /> Note</div>
-            <div className="text-xs text-slate-700">{request.noteToFacilities}</div>
+          <div className="bg-background border border-border rounded-md p-3 mb-4">
+            <div className="text-[10px] uppercase text-muted-foreground mb-1 flex items-center gap-1"><MessageSquare className="w-3 h-3" /> Note</div>
+            <div className="text-xs text-foreground">{request.noteToFacilities}</div>
           </div>
         )}
 
         {/* Outgoing: show responses + actions */}
         {isOutgoing && (
           <>
-            <div className="border-t border-slate-200 pt-4">
+            <div className="border-t border-border pt-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-semibold">Responses ({responses.length})</h3>
                 {['Open', 'Partially Responded'].includes(request.status) && (
@@ -503,25 +503,25 @@ function RequestDetailDialog({ request, isOutgoing, onClose, onChanged }: {
                 )}
               </div>
               {loading ? (
-                <div className="text-xs text-slate-500 text-center py-6">Loading responses...</div>
+                <div className="text-xs text-muted-foreground text-center py-6">Loading responses...</div>
               ) : responses.length === 0 ? (
                 <EmptyState title="No responses yet" description="Facilities with matching stock will respond here in real time." icon={Clock} />
               ) : (
                 <div className="space-y-2">
                   {responses.map(r => (
-                    <div key={r.id} className={`rounded-md border p-3 ${r.status === 'Selected' ? 'border-violet-300 bg-violet-50' : 'border-slate-200'}`}>
+                    <div key={r.id} className={`rounded-md border p-3 ${r.status === 'Selected' ? 'border-violet-300 bg-violet-50' : 'border-border'}`}>
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <Building2 className="w-4 h-4 text-slate-500" />
+                            <Building2 className="w-4 h-4 text-muted-foreground" />
                             <span className="text-sm font-medium truncate">{r.respondingFacility?.name}</span>
                             <Badge variant="outline" className={statusColor(r.status)}>{r.status}</Badge>
                           </div>
-                          <div className="text-xs text-slate-500 mt-1">
+                          <div className="text-xs text-muted-foreground mt-1">
                             {r.respondingFacility?.region} · Unit {r.offeredUnit?.unitCode ?? 'N/A'} · {timeAgo(r.createdAt)}
                           </div>
                           {r.responderNote && (
-                            <div className="text-xs text-slate-600 mt-1 italic">"{r.responderNote}"</div>
+                            <div className="text-xs text-muted-foreground mt-1 italic">"{r.responderNote}"</div>
                           )}
                         </div>
                         {request.status === 'Partially Responded' && r.status === 'Pending' && (
@@ -560,7 +560,7 @@ function RequestDetailDialog({ request, isOutgoing, onClose, onChanged }: {
 
         {/* Incoming: respond form */}
         {!isOutgoing && request.status !== 'Cancelled' && request.status !== 'Fulfilled' && request.status !== 'Expired' && (
-          <div className="border-t border-slate-200 pt-4">
+          <div className="border-t border-border pt-4">
             <h3 className="text-sm font-semibold mb-3">Submit a Response</h3>
             {request.responses?.length > 0 ? (
               <div className="bg-emerald-50 border border-emerald-200 rounded-md p-3 flex items-center gap-2 text-sm text-emerald-800">

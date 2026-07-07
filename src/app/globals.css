@@ -45,7 +45,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: oklch(0.985 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -119,4 +119,102 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.85 0 0);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.75 0 0);
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background: oklch(0.35 0 0);
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.45 0 0);
+  }
+}
+
+/* === PRINT STYLES === */
+@media print {
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+  html, body {
+    background: white !important;
+    color: black !important;
+    font-size: 11px !important;
+  }
+  /* Force light theme colors when printing */
+  :root {
+    --background: oklch(1 0 0) !important;
+    --foreground: oklch(0.145 0 0) !important;
+    --card: oklch(1 0 0) !important;
+    --card-foreground: oklch(0.145 0 0) !important;
+    --border: oklch(0.85 0 0) !important;
+    --muted: oklch(0.97 0 0) !important;
+    --muted-foreground: oklch(0.4 0 0) !important;
+  }
+  /* Hide navigation and non-essential UI */
+  header, aside, footer, button, .no-print {
+    display: none !important;
+  }
+  /* Hide Sonner/Toaster */
+  [data-sonner-toaster], [role="region"][aria-label*="Notifications"] {
+    display: none !important;
+  }
+  /* Main content takes full width */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+  /* Show all print-only content */
+  .print-only {
+    display: block !important;
+  }
+  /* Prevent page breaks inside cards/charts/tables */
+  .print-block {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  /* Cards: remove shadow, use border */
+  [class*="rounded-lg"], [class*="rounded-xl"], [class*="rounded-md"] {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    break-inside: avoid;
+  }
+  /* Background colors: ensure they print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  /* Recharts SVG: ensure visible */
+  .recharts-wrapper, .recharts-surface, svg.recharts-surface {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid;
+  }
+  /* Tables */
+  table {
+    page-break-inside: auto;
+  }
+  tr {
+    page-break-inside: avoid;
+  }
+  thead {
+    display: table-header-group;
+  }
+}
+
+.print-only {
+  display: none;
 }

@@ -89,9 +89,9 @@ export function BloodUnitsPage() {
         <CardContent className="p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             <div className="lg:col-span-1">
-              <Label className="text-xs text-slate-500">Search</Label>
+              <Label className="text-xs text-muted-foreground">Search</Label>
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
                 <Input
                   placeholder="Unit code or donor..."
                   value={filters.search}
@@ -101,7 +101,7 @@ export function BloodUnitsPage() {
               </div>
             </div>
             <div>
-              <Label className="text-xs text-slate-500">Blood Group</Label>
+              <Label className="text-xs text-muted-foreground">Blood Group</Label>
               <Select value={filters.bloodGroup} onValueChange={(v) => setFilters({ ...filters, bloodGroup: v })}>
                 <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -111,7 +111,7 @@ export function BloodUnitsPage() {
               </Select>
             </div>
             <div>
-              <Label className="text-xs text-slate-500">Component</Label>
+              <Label className="text-xs text-muted-foreground">Component</Label>
               <Select value={filters.componentType} onValueChange={(v) => setFilters({ ...filters, componentType: v })}>
                 <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -121,7 +121,7 @@ export function BloodUnitsPage() {
               </Select>
             </div>
             <div>
-              <Label className="text-xs text-slate-500">Status</Label>
+              <Label className="text-xs text-muted-foreground">Status</Label>
               <Select value={filters.status} onValueChange={(v) => setFilters({ ...filters, status: v })}>
                 <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -132,7 +132,7 @@ export function BloodUnitsPage() {
             </div>
             {isAdmin && (
               <div>
-                <Label className="text-xs text-slate-500">Facility</Label>
+                <Label className="text-xs text-muted-foreground">Facility</Label>
                 <Select value={filters.facilityId} onValueChange={(v) => setFilters({ ...filters, facilityId: v })}>
                   <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -145,7 +145,7 @@ export function BloodUnitsPage() {
           </div>
           {(filters.bloodGroup !== 'all' || filters.componentType !== 'all' || filters.status !== 'all' || filters.search || (isAdmin && filters.facilityId !== 'all')) && (
             <div className="mt-3 flex items-center gap-2 flex-wrap">
-              <span className="text-xs text-slate-500">Active filters:</span>
+              <span className="text-xs text-muted-foreground">Active filters:</span>
               {filters.bloodGroup !== 'all' && <Badge variant="secondary" className="cursor-pointer" onClick={() => setFilters({ ...filters, bloodGroup: 'all' })}>{filters.bloodGroup} <X className="w-3 h-3 ml-1" /></Badge>}
               {filters.componentType !== 'all' && <Badge variant="secondary" className="cursor-pointer" onClick={() => setFilters({ ...filters, componentType: 'all' })}>{filters.componentType} <X className="w-3 h-3 ml-1" /></Badge>}
               {filters.status !== 'all' && <Badge variant="secondary" className="cursor-pointer" onClick={() => setFilters({ ...filters, status: 'all' })}>{filters.status} <X className="w-3 h-3 ml-1" /></Badge>}
@@ -161,7 +161,7 @@ export function BloodUnitsPage() {
       <Card>
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-8 text-center text-sm text-slate-500">Loading blood units...</div>
+            <div className="p-8 text-center text-sm text-muted-foreground">Loading blood units...</div>
           ) : filtered.length === 0 ? (
             <EmptyState title="No blood units found" description="Try adjusting filters or register a new unit." icon={Boxes} />
           ) : (
@@ -193,7 +193,7 @@ export function BloodUnitsPage() {
                           </div>
                         </TableCell>
                         <TableCell className="text-xs">{u.componentType}</TableCell>
-                        <TableCell className="hidden md:table-cell text-xs text-slate-600">{formatDate(u.collectionDate)}</TableCell>
+                        <TableCell className="hidden md:table-cell text-xs text-muted-foreground">{formatDate(u.collectionDate)}</TableCell>
                         <TableCell>
                           <div className="text-xs">{formatDate(u.expiryDate)}</div>
                           {isNearExpiry && (
@@ -207,7 +207,7 @@ export function BloodUnitsPage() {
                             </Badge>
                           )}
                         </TableCell>
-                        <TableCell className="hidden lg:table-cell text-xs text-slate-600">
+                        <TableCell className="hidden lg:table-cell text-xs text-muted-foreground">
                           {u.storageUnit?.name ?? <span className="text-amber-600">Unassigned</span>}
                         </TableCell>
                         {isAdmin && <TableCell className="hidden xl:table-cell text-xs">{u.facility?.name}</TableCell>}
@@ -241,7 +241,7 @@ export function BloodUnitsPage() {
             </div>
           )}
           {!loading && filtered.length > 0 && (
-            <div className="px-4 py-3 border-t border-slate-100 text-xs text-slate-500">
+            <div className="px-4 py-3 border-t border-border text-xs text-muted-foreground">
               Showing {filtered.length} of {units.length} units
             </div>
           )}
@@ -371,7 +371,7 @@ function AddBloodUnitDialog({ open, onOpenChange, donors, storageUnits, onSucces
             <div>
               <Label htmlFor="qty">Quantity (batch)</Label>
               <Input id="qty" type="number" min="1" max="20" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} />
-              <p className="text-[10px] text-slate-500 mt-1">Register multiple units at once</p>
+              <p className="text-[10px] text-muted-foreground mt-1">Register multiple units at once</p>
             </div>
             <div>
               <Label htmlFor="donor">Donor</Label>

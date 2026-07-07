@@ -44,7 +44,7 @@ export function AlertsPage() {
         </CardHeader>
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-8 text-center text-sm text-slate-500">Loading...</div>
+            <div className="p-8 text-center text-sm text-muted-foreground">Loading...</div>
           ) : nearExpiry.length === 0 ? (
             <EmptyState title="No units expiring soon" icon={CheckCircle2} />
           ) : (
@@ -58,12 +58,12 @@ export function AlertsPage() {
                         {u.bloodGroup}
                       </div>
                       <div className="min-w-0">
-                        <div className="text-sm font-medium font-mono text-slate-900">{u.unitCode}</div>
-                        <div className="text-xs text-slate-500 truncate">{u.componentType} · {u.storageUnit?.name ?? 'Unassigned'}</div>
+                        <div className="text-sm font-medium font-mono text-foreground">{u.unitCode}</div>
+                        <div className="text-xs text-muted-foreground truncate">{u.componentType} · {u.storageUnit?.name ?? 'Unassigned'}</div>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="text-xs text-slate-600">{formatDate(u.expiryDate)}</div>
+                      <div className="text-xs text-muted-foreground">{formatDate(u.expiryDate)}</div>
                       <Badge variant="outline" className={
                         days <= 1 ? 'border-rose-300 text-rose-700 bg-rose-50' :
                         days <= 3 ? 'border-amber-300 text-amber-700 bg-amber-50' :
@@ -89,7 +89,7 @@ export function AlertsPage() {
         </CardHeader>
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-8 text-center text-sm text-slate-500">Loading...</div>
+            <div className="p-8 text-center text-sm text-muted-foreground">Loading...</div>
           ) : expired.length === 0 ? (
             <EmptyState title="No expired units" icon={CheckCircle2} />
           ) : (
@@ -101,8 +101,8 @@ export function AlertsPage() {
                       {u.bloodGroup}
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-medium font-mono text-slate-700">{u.unitCode}</div>
-                      <div className="text-xs text-slate-500 truncate">{u.componentType} · Expired {formatDate(u.expiryDate)}</div>
+                      <div className="text-sm font-medium font-mono text-foreground">{u.unitCode}</div>
+                      <div className="text-xs text-muted-foreground truncate">{u.componentType} · Expired {formatDate(u.expiryDate)}</div>
                     </div>
                   </div>
                   <Badge variant="outline" className="border-rose-300 text-rose-700 bg-rose-50">Expired</Badge>
@@ -113,11 +113,11 @@ export function AlertsPage() {
         </CardContent>
       </Card>
 
-      <div className="rounded-lg bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
-        <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
-        <div className="text-sm text-amber-800">
+      <div className="rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 p-4 flex items-start gap-3">
+        <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+        <div className="text-sm text-amber-800 dark:text-amber-200">
           <div className="font-semibold">Why these alerts matter</div>
-          <div className="text-xs text-amber-700 mt-1">
+          <div className="text-xs text-amber-700 dark:text-amber-300 mt-1">
             Expired blood units cannot be used for transfusion and must be discarded. Units expiring soon should be prioritized for use to minimize wastage. The system automatically flags units 5 days before expiry.
           </div>
         </div>

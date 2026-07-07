@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { ROLE_LABELS, ROLE_BADGES } from '@/lib/auth-constants'
 import {
   Droplet, LayoutDashboard, Boxes, Network, FlaskConical, Users, Building2,
@@ -74,23 +75,23 @@ export function AppShell({ children, currentPage }: { children: ReactNode; curre
   const initials = user.fullName.split(' ').map(s => s[0]).slice(0, 2).join('').toUpperCase()
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className="min-h-screen flex flex-col bg-background">
       {/* Top bar */}
-      <header className="sticky top-0 z-30 bg-white border-b border-slate-200 h-16 flex items-center px-4 lg:px-6 gap-3">
+      <header className="no-print sticky top-0 z-30 bg-card border-b border-border h-16 flex items-center px-4 lg:px-6 gap-3">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="lg:hidden p-2 rounded-md hover:bg-slate-100"
+          className="lg:hidden p-2 rounded-md hover:bg-muted"
           aria-label="Toggle navigation"
         >
           {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
         <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-rose-600 to-red-700 flex items-center justify-center">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-rose-600 to-red-700 flex items-center justify-center shrink-0">
             <Droplet className="w-5 h-5 text-white" fill="currentColor" />
           </div>
           <div className="hidden sm:block">
-            <div className="text-sm font-semibold text-slate-900 leading-tight">BBMS Ghana</div>
-            <div className="text-[11px] text-slate-500 leading-tight">Blood Bank Management</div>
+            <div className="text-sm font-semibold text-foreground leading-tight">BBMS Ghana</div>
+            <div className="text-[11px] text-muted-foreground leading-tight">Blood Bank Management</div>
           </div>
         </div>
 
@@ -98,28 +99,30 @@ export function AppShell({ children, currentPage }: { children: ReactNode; curre
 
         {/* Facility indicator */}
         {user.role !== 'SYS_ADMIN' && (
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200">
-            <Building2 className="w-3.5 h-3.5 text-slate-500" />
-            <span className="text-xs text-slate-700 max-w-[200px] truncate">{user.facilityName}</span>
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted border border-border">
+            <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
+            <span className="text-xs text-foreground max-w-[200px] truncate">{user.facilityName}</span>
           </div>
         )}
 
-        <Badge className={`${ROLE_BADGES[user.role]} border`} variant="outline">
+        <ThemeToggle />
+
+        <Badge className={`${ROLE_BADGES[user.role]} border hidden sm:inline-flex`} variant="outline">
           {ROLE_LABELS[user.role]}
         </Badge>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 p-1 pr-2 rounded-full hover:bg-slate-100 transition-colors">
+            <button className="flex items-center gap-2 p-1 pr-2 rounded-full hover:bg-muted transition-colors" aria-label="User menu">
               <Avatar className="w-8 h-8">
-                <AvatarFallback className="bg-rose-100 text-rose-700 text-xs font-semibold">{initials}</AvatarFallback>
+                <AvatarFallback className="bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 text-xs font-semibold">{initials}</AvatarFallback>
               </Avatar>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <div className="px-3 py-2">
               <div className="text-sm font-medium truncate">{user.fullName}</div>
-              <div className="text-xs text-slate-500 truncate">{user.email}</div>
+              <div className="text-xs text-muted-foreground truncate">{user.email}</div>
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => navigate('dashboard')} className="cursor-pointer">
@@ -138,7 +141,7 @@ export function AppShell({ children, currentPage }: { children: ReactNode; curre
       <div className="flex flex-1 relative">
         {/* Sidebar */}
         <aside
-          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:sticky top-16 left-0 bottom-0 lg:top-16 lg:h-[calc(100vh-4rem)] z-20 w-64 bg-white border-r border-slate-200 transition-transform overflow-y-auto`}
+          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:sticky top-16 left-0 bottom-0 lg:top-16 lg:h-[calc(100vh-4rem)] z-20 w-64 bg-card border-r border-border transition-transform overflow-y-auto no-print`}
         >
           <nav className="p-3 space-y-1">
             {items.map((item) => {
@@ -153,23 +156,23 @@ export function AppShell({ children, currentPage }: { children: ReactNode; curre
                   }}
                   className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     active
-                      ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                      : 'text-slate-700 hover:bg-slate-100 border border-transparent'
+                      ? 'bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300 border border-rose-200 dark:border-rose-900'
+                      : 'text-foreground hover:bg-muted border border-transparent'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${active ? 'text-rose-600' : 'text-slate-500'}`} />
+                  <Icon className={`w-4 h-4 ${active ? 'text-rose-600 dark:text-rose-400' : 'text-muted-foreground'}`} />
                   {item.label}
                 </button>
               )
             })}
           </nav>
-          <div className="p-3 mt-2 border-t border-slate-100">
-            <div className="px-3 py-2 rounded-md bg-slate-50 border border-slate-200">
-              <div className="flex items-center gap-2 text-xs text-slate-600">
+          <div className="p-3 mt-2 border-t border-border">
+            <div className="px-3 py-2 rounded-md bg-muted border border-border">
+              <div className="flex items-center gap-2 text-xs text-foreground">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                 <span className="font-medium">HTTPS Encrypted</span>
               </div>
-              <div className="text-[10px] text-slate-500 mt-1">Ghana Data Protection Act 2012 (Act 843) Compliant</div>
+              <div className="text-[10px] text-muted-foreground mt-1">Ghana Data Protection Act 2012 (Act 843) Compliant</div>
             </div>
           </div>
         </aside>
@@ -177,7 +180,7 @@ export function AppShell({ children, currentPage }: { children: ReactNode; curre
         {/* Mobile overlay */}
         {sidebarOpen && (
           <div
-            className="lg:hidden fixed inset-0 top-16 bg-slate-900/40 z-10"
+            className="lg:hidden fixed inset-0 top-16 bg-slate-900/40 dark:bg-black/60 z-10"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -189,12 +192,12 @@ export function AppShell({ children, currentPage }: { children: ReactNode; curre
       </div>
 
       {/* Footer */}
-      <footer className="mt-auto bg-white border-t border-slate-200 py-4 px-4 lg:px-6 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <footer className="no-print mt-auto bg-card border-t border-border py-4 px-4 lg:px-6 text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Activity className="w-3.5 h-3.5 text-rose-500" />
           <span>Cloud-Based Blood Bank Management System &middot; Ghana &middot; 2026</span>
         </div>
-        <div className="text-slate-400">Group E Project &middot; GCTU</div>
+        <div className="text-muted-foreground/70">Group E Project &middot; GCTU</div>
       </footer>
     </div>
   )
