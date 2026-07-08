@@ -284,45 +284,68 @@ def make_status_bar_chart(status_dict, title, color=SKY):
 
 
 def make_storage_chart(storage_data):
+    """Horizontal bar chart for storage utilization - handles many items cleanly.
+    Returns a list of drawings (one per page if many storage units)."""
     if not storage_data:
-        return None
-    names = [s['name'][:22] for s in storage_data]
-    used = [s.get('used', 0) for s in storage_data]
-    capacity = [s.get('capacity', 0) for s in storage_data]
+        return []
 
-    drawing = Drawing(440, max(200, 30 * len(storage_data) + 50))
-    bc = VerticalBarChart()
-    bc.x = 60
-    bc.y = 35
-    bc.height = max(100, 22 * len(storage_data))
-    bc.width = 340
-    bc.data = [used, capacity]
-    bc.bars[0].fillColor = VIOLET
-    bc.bars[1].fillColor = BORDER_DARK
-    bc.barWidth = 10
-    bc.groupSpacing = 12
-    bc.categoryAxis.categoryNames = names
-    bc.categoryAxis.labels.fontSize = 7
-    bc.categoryAxis.labels.fillColor = DARK
-    bc.categoryAxis.labels.angle = 25
-    bc.categoryAxis.labels.boxAnchor = 'ne'
-    bc.valueAxis.valueMin = 0
-    bc.valueAxis.valueMax = max(max(used), max(capacity), 10) + 5
-    bc.valueAxis.labels.fontSize = 8
-    bc.valueAxis.labels.fillColor = MUTED
-    bc.valueAxis.visibleGrid = True
-    bc.valueAxis.gridStrokeColor = BORDER
-    bc.valueAxis.gridStrokeWidth = 0.25
-    bc.valueAxis.gridStrokeDashArray = (2, 2)
-    drawing.add(bc)
+    from reportlab.graphics.charts.barcharts import HorizontalBarChart
 
-    h = drawing.height
-    drawing.add(String(60, h - 15, 'Storage Unit Utilization (Used vs Capacity)', fontName='Helvetica-Bold', fontSize=11, fillColor=DARK))
-    drawing.add(Rect(260, h - 18, 8, 8, fillColor=VIOLET, strokeColor=None))
-    drawing.add(String(271, h - 17, 'Used', fontName='Helvetica', fontSize=8, fillColor=SLATE))
-    drawing.add(Rect(315, h - 18, 8, 8, fillColor=BORDER_DARK, strokeColor=None))
-    drawing.add(String(326, h - 17, 'Capacity', fontName='Helvetica', fontSize=8, fillColor=SLATE))
-    return drawing
+    drawings = []
+    # Split into chunks of 10 per chart page
+    chunk_size = 10
+    chunks = [storage_data[i:i + chunk_size] for i in range(0, len(storage_data), chunk_size)]
+
+    for chunk_idx, chunk in enumerate(chunks):
+        names = [s['name'][:26] for s in chunk]
+        used = [s.get('used', 0) for s in chunk]
+        capacity = [s.get('capacity', 0) for s in chunk]
+
+        n = len(chunk)
+        # Calculate height based on number of items - each item needs ~22px
+        bar_area_h = max(120, n * 22)
+        chart_h = bar_area_h + 50
+        drawing = Drawing(460, chart_h)
+
+        bc = HorizontalBarChart()
+        bc.x = 170  # left margin for labels
+        bc.y = 20
+        bc.height = bar_area_h
+        bc.width = 260
+        bc.data = [used, capacity]
+        bc.bars[0].fillColor = VIOLET
+        bc.bars[1].fillColor = BORDER_DARK
+        bc.barWidth = 6
+        bc.groupSpacing = 8
+        bc.categoryAxis.categoryNames = names
+        bc.categoryAxis.labels.fontSize = 7
+        bc.categoryAxis.labels.fillColor = DARK
+        bc.categoryAxis.labels.textAnchor = 'end'
+        bc.valueAxis.valueMin = 0
+        bc.valueAxis.valueMax = max(max(used), max(capacity), 10) + 5
+        bc.valueAxis.labels.fontSize = 8
+        bc.valueAxis.labels.fillColor = MUTED
+        bc.valueAxis.visibleGrid = True
+        bc.valueAxis.gridStrokeColor = BORDER
+        bc.valueAxis.gridStrokeWidth = 0.25
+        bc.valueAxis.gridStrokeDashArray = (2, 2)
+        drawing.add(bc)
+
+        # Title and legend only on first chunk
+        if chunk_idx == 0:
+            drawing.add(String(10, chart_h - 15, 'Storage Unit Utilization (Used vs Capacity)',
+                               fontName='Helvetica-Bold', fontSize=11, fillColor=DARK))
+            drawing.add(Rect(280, chart_h - 18, 8, 8, fillColor=VIOLET, strokeColor=None))
+            drawing.add(String(291, chart_h - 17, 'Used', fontName='Helvetica', fontSize=8, fillColor=SLATE))
+            drawing.add(Rect(335, chart_h - 18, 8, 8, fillColor=BORDER_DARK, strokeColor=None))
+            drawing.add(String(346, chart_h - 17, 'Capacity', fontName='Helvetica', fontSize=8, fillColor=SLATE))
+        else:
+            drawing.add(String(10, chart_h - 15, f'Storage Unit Utilization (continued, {chunk_idx * chunk_size + 1}-{chunk_idx * chunk_size + n})',
+                               fontName='Helvetica-Bold', fontSize=10, fillColor=MUTED))
+
+        drawings.append(drawing)
+
+    return drawings
 
 
 # === TABLE BUILDERS ===
@@ -807,13 +830,28 @@ def main():
         STYLES['Body']
     ))
     story.append(Spacer(1, 4))
-    storage_chart = make_storage_chart(storage)
-    if storage_chart:
-        story.append(storage_chart)
-        story.append(Paragraph('Figure 7: Storage unit utilization (used vs capacity)', STYLES['Caption']))
+    storage_charts = make_storage_chart(storage)
+    if storage_charts:
+        for idx, chart in enumerate(storage_charts):
+            story.append(chart)
+            if idx == 0:
+                story.append(Paragraph(f'Figure 7: Storage unit utilization (used vs capacity){f" — page 1 of {len(storage_charts)}" if len(storage_charts) > 1 else ""}', STYLES['Caption']))
+            else:
+                story.append(Paragraph(f'Figure 7{chr(97 + idx)}: Storage unit utilization (continued, page {idx + 1} of {len(storage_charts)})', STYLES['Caption']))
+            if idx < len(storage_charts) - 1:
+                story.append(PageBreak())
     story.append(Spacer(1, 6))
     storage_table = make_storage_table(storage)
     if storage_table:
+        story.append(PageBreak())
+        story.append(Paragraph('Detailed Storage Utilization Breakdown', STYLES['ReportH3']))
+        story.append(Paragraph(
+            'The table below provides exact figures for each storage unit, including the current number '
+            'of blood units stored, maximum capacity, and utilization percentage. Utilization is '
+            'color-coded: green for healthy (below 70%), amber for monitoring (70-90%), and red for '
+            'critical (above 90%).',
+            STYLES['Body']
+        ))
         story.append(storage_table)
         story.append(Paragraph('Table 2: Detailed storage utilization breakdown', STYLES['Caption']))
 
