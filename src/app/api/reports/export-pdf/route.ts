@@ -152,7 +152,9 @@ export async function GET(req: NextRequest) {
 
   try {
     const scriptPath = join(process.cwd(), 'scripts', 'generate_report_pdf.py')
-    const { stderr } = await execAsync(`python3 ${scriptPath} ${jsonPath} ${pdfPath}`, { timeout: 30000 })
+    // Use the venv python which has reportlab installed
+    const pythonBin = process.env.PYTHON_BIN || '/home/z/.venv/bin/python3'
+    const { stderr } = await execAsync(`${pythonBin} ${scriptPath} ${jsonPath} ${pdfPath}`, { timeout: 30000, env: { ...process.env, PATH: '/home/z/.venv/bin:' + (process.env.PATH || '') } })
     if (stderr) console.error('PDF generation stderr:', stderr)
 
     if (!existsSync(pdfPath)) {

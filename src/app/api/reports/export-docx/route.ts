@@ -137,7 +137,8 @@ export async function GET(req: NextRequest) {
 
   try {
     const scriptPath = join(process.cwd(), 'scripts', 'generate_report_docx.py')
-    const { stderr } = await execAsync(`python3 ${scriptPath} ${jsonPath} ${docxPath}`, { timeout: 30000 })
+    const pythonBin = process.env.PYTHON_BIN || '/home/z/.venv/bin/python3'
+    const { stderr } = await execAsync(`${pythonBin} ${scriptPath} ${jsonPath} ${docxPath}`, { timeout: 30000, env: { ...process.env, PATH: '/home/z/.venv/bin:' + (process.env.PATH || '') } })
     if (stderr) console.error('DOCX generation stderr:', stderr)
 
     if (!existsSync(docxPath)) {
