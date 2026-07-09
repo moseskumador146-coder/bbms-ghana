@@ -60,6 +60,19 @@ export function DashboardPage() {
 
 function FacilityDashboard({ data, navigate, userName }: { data: DashboardData; navigate: (p: string) => void; userName: string }) {
   const { facility, stats, stockByGroup, nearExpiryUnits, pendingInternalRequests, incomingNetworkRequests, outgoingNetworkRequests, recentActivity } = data
+
+  // Safety check - if stats is undefined, show loading
+  if (!stats) {
+    return (
+      <div className="space-y-6">
+        <div className="h-8 w-48 bg-muted rounded animate-pulse" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-muted rounded-lg animate-pulse" />)}
+        </div>
+      </div>
+    )
+  }
+
   const totalStock = Object.values(stockByGroup ?? {}).reduce((s, c) => s + (c as number), 0)
   const groupEntries = Object.entries(stockByGroup ?? {}).sort(([a], [b]) => a.localeCompare(b))
 
@@ -71,10 +84,10 @@ function FacilityDashboard({ data, navigate, userName }: { data: DashboardData; 
       />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
-        <StatCard title="Available Units" value={stats.availableUnits} icon={Droplet} accent="rose" subtitle={`${stats.totalUnits} total in inventory`} onClick={() => navigate('blood-units')} />
-        <StatCard title="Expiring Soon" value={stats.nearExpiryCount} icon={AlertTriangle} accent="amber" subtitle="Within 5 days" onClick={() => navigate('alerts')} />
-        <StatCard title="Pending Requests" value={stats.pendingInternal} icon={FlaskConical} accent="sky" subtitle={`${stats.internalToday} submitted today`} onClick={() => navigate('internal-requests')} />
-        <StatCard title="Network Activity" value={stats.incomingMatching + stats.outgoingNetwork} icon={Network} accent="violet" subtitle={`${stats.incomingMatching} incoming · ${stats.outgoingNetwork} outgoing`} onClick={() => navigate('network-requests')} />
+        <StatCard title="Available Units" value={stats.availableUnits ?? 0} icon={Droplet} accent="rose" subtitle={`${stats.totalUnits ?? 0} total in inventory`} onClick={() => navigate('blood-units')} />
+        <StatCard title="Expiring Soon" value={stats.nearExpiryCount ?? 0} icon={AlertTriangle} accent="amber" subtitle="Within 5 days" onClick={() => navigate('alerts')} />
+        <StatCard title="Pending Requests" value={stats.pendingInternal ?? 0} icon={FlaskConical} accent="sky" subtitle={`${stats.internalToday ?? 0} submitted today`} onClick={() => navigate('internal-requests')} />
+        <StatCard title="Network Activity" value={(stats.incomingMatching ?? 0) + (stats.outgoingNetwork ?? 0)} icon={Network} accent="violet" subtitle={`${stats.incomingMatching ?? 0} incoming · ${stats.outgoingNetwork ?? 0} outgoing`} onClick={() => navigate('network-requests')} />
       </div>
 
       {(stats.lowStockGroups?.length > 0 || stats.expiredUnits > 0) && (
@@ -301,6 +314,17 @@ function FacilityDashboard({ data, navigate, userName }: { data: DashboardData; 
 
 function SysAdminDashboard({ data, navigate }: { data: DashboardData; navigate: (p: string) => void }) {
   const { stats, facilities = [], groupDistribution = {} } = data
+
+  if (!stats) {
+    return (
+      <div className="space-y-6">
+        <div className="h-8 w-48 bg-muted rounded animate-pulse" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-muted rounded-lg animate-pulse" />)}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
