@@ -1,5 +1,5 @@
 // Cloud-Based Blood Bank Management System - Prisma Schema
-// Group E - Ghana Communication Technology University
+// BBMS Ghana
 
 generator client {
   provider = "prisma-client-js"

@@ -134,8 +134,8 @@ def cover_page(canvas, doc):
     canvas.line(20 * mm, 18 * mm, w - 20 * mm, 18 * mm)
     canvas.setFillColor(colors.HexColor('#fecaca'))
     canvas.setFont('Helvetica', 8)
-    canvas.drawString(20 * mm, 12 * mm, 'Ghana Communication Technology University')
-    canvas.drawRightString(w - 20 * mm, 12 * mm, 'Group E Project · June 2026')
+    canvas.drawString(20 * mm, 12 * mm, 'Cloud-Based Blood Bank Management System')
+    canvas.drawRightString(w - 20 * mm, 12 * mm, 'Ghana · 2026')
     canvas.restoreState()
 
 
@@ -912,8 +912,7 @@ def main():
     ))
     story.append(Spacer(1, 8))
     story.append(Paragraph(
-        '<b>BBMS Ghana</b> · Cloud-Based Blood Bank Management System · '
-        'Ghana Communication Technology University · Group E Project · June 2026',
+        '<b>BBMS Ghana</b> · Cloud-Based Blood Bank Management System · Ghana · 2026',
         STYLES['Caption']
     ))
 

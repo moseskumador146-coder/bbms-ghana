@@ -92,8 +92,8 @@ export function LoginPage() {
           </div>
         </div>
         <div className="relative text-xs text-rose-100">
-          <p>Ghana Communication Technology University &middot; Faculty of Computing & Information Systems</p>
-          <p className="mt-1">Group E Project &middot; June 2026 &middot; Supervisor: Dr. Patrick Acheampong</p>
+          <p>Cloud-Based Blood Bank Management System</p>
+          <p className="mt-1">Real-time inventory &middot; Cross-facility network &middot; Ghana 2026</p>
         </div>
       </div>
 

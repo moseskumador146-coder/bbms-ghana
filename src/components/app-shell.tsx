@@ -197,7 +197,7 @@ export function AppShell({ children, currentPage }: { children: ReactNode; curre
           <Activity className="w-3.5 h-3.5 text-rose-500" />
           <span>Cloud-Based Blood Bank Management System &middot; Ghana &middot; 2026</span>
         </div>
-        <div className="text-muted-foreground/70">Group E Project &middot; GCTU</div>
+        <div className="text-muted-foreground/70">BBMS Ghana &middot; 2026</div>
       </footer>
     </div>
   )

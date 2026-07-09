@@ -1,6 +1,6 @@
 # BBMS Ghana — Cloud-Based Blood Bank Management System
 
-A cloud-based, multi-facility Blood Bank Management System for Ghana healthcare facilities. Built as a Group E project for Ghana Communication Technology University (GCTU).
+A cloud-based, multi-facility Blood Bank Management System for Ghana healthcare facilities.
 
 ## Live Preview
 
@@ -163,7 +163,7 @@ src/
 
 ## License
 
-This is an academic project for Ghana Communication Technology University. All rights reserved to Group E.
+This project is licensed under the MIT License.
 
 ## Team
 
@@ -171,5 +171,4 @@ This is an academic project for Ghana Communication Technology University. All r
 - Tettey Kingsley (4211231275)
 - Amoakwa Bamfo Caleb (4211231179)
 
-**Supervisor**: Dr. Patrick Acheampong
 **Date**: June 2026
