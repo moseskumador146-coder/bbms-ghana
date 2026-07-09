@@ -137,8 +137,11 @@ export async function GET(req: NextRequest) {
 
   try {
     const scriptPath = join(process.cwd(), 'scripts', 'generate_report_docx.py')
-    const pythonBin = process.env.PYTHON_BIN || '/home/z/.venv/bin/python3'
-    const { stderr } = await execAsync(`${pythonBin} ${scriptPath} ${jsonPath} ${docxPath}`, { timeout: 30000, env: { ...process.env, PATH: '/home/z/.venv/bin:' + (process.env.PATH || '') } })
+    const pythonBin = process.env.PYTHON_BIN || 'python3'
+    const { stderr } = await execAsync(`${pythonBin} ${scriptPath} ${jsonPath} ${docxPath}`, {
+      timeout: 30000,
+      env: { ...process.env, PATH: '/home/z/.venv/bin:' + (process.env.PATH || '') }
+    })
     if (stderr) console.error('DOCX generation stderr:', stderr)
 
     if (!existsSync(docxPath)) {
@@ -162,6 +165,8 @@ export async function GET(req: NextRequest) {
     console.error('DOCX export error', e)
     await unlink(jsonPath).catch(() => {})
     await unlink(docxPath).catch(() => {})
-    return NextResponse.json({ error: 'Failed to generate DOCX' }, { status: 500 })
+    return NextResponse.json({
+      error: 'DOCX generation requires Python with python-docx installed. On Vercel, DOCX export is not available — use CSV export instead, or deploy on a platform that supports Python (Railway, Render, self-hosted).'
+    }, { status: 500 })
   }
 }

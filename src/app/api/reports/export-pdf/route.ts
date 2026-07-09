@@ -152,9 +152,12 @@ export async function GET(req: NextRequest) {
 
   try {
     const scriptPath = join(process.cwd(), 'scripts', 'generate_report_pdf.py')
-    // Use the venv python which has reportlab installed
-    const pythonBin = process.env.PYTHON_BIN || '/home/z/.venv/bin/python3'
-    const { stderr } = await execAsync(`${pythonBin} ${scriptPath} ${jsonPath} ${pdfPath}`, { timeout: 30000, env: { ...process.env, PATH: '/home/z/.venv/bin:' + (process.env.PATH || '') } })
+    // Try to find a Python binary with reportlab installed
+    const pythonBin = process.env.PYTHON_BIN || 'python3'
+    const { stderr } = await execAsync(`${pythonBin} ${scriptPath} ${jsonPath} ${pdfPath}`, {
+      timeout: 30000,
+      env: { ...process.env, PATH: '/home/z/.venv/bin:' + (process.env.PATH || '') }
+    })
     if (stderr) console.error('PDF generation stderr:', stderr)
 
     if (!existsSync(pdfPath)) {
@@ -180,6 +183,8 @@ export async function GET(req: NextRequest) {
     // Cleanup
     await unlink(jsonPath).catch(() => {})
     await unlink(pdfPath).catch(() => {})
-    return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 })
+    return NextResponse.json({
+      error: 'PDF generation requires Python with reportlab installed. On Vercel, PDF export is not available — use CSV export instead, or deploy on a platform that supports Python (Railway, Render, self-hosted).'
+    }, { status: 500 })
   }
 }

@@ -56,24 +56,24 @@ The application runs on Next.js 16 with a SQLite database (production-ready for 
 
 ### Prerequisites
 - Node.js 18+ or Bun
-- Python 3.10+ (for PDF/DOCX export)
-- `reportlab` and `python-docx` Python packages
+- Python 3.10+ (for PDF/DOCX export — optional, CSV export works without Python)
+- `reportlab` and `python-docx` Python packages (for PDF/DOCX export)
 
 ### Installation
 
 ```bash
 # Install dependencies
-bun install
+npm install
 
 # Set up the database
 cp .env.example .env  # Configure DATABASE_URL
-bun run db:push
+npx prisma db push
 
 # Seed with demo data
-bun run scripts/seed.ts
+npm run seed
 
 # Start the dev server
-bun run dev
+npm run dev
 ```
 
 Open `http://localhost:3000` and log in with any demo account above.
@@ -82,6 +82,44 @@ Open `http://localhost:3000` and log in with any demo account above.
 
 ```bash
 pip install reportlab python-docx
+```
+
+## Deployment
+
+### Vercel (Recommended for Next.js)
+
+1. Push your code to GitHub
+2. Go to [vercel.com](https://vercel.com) and sign in with GitHub
+3. Click "Add New..." → "Project"
+4. Import your `bbms-ghana` repository
+5. Vercel auto-detects Next.js — no config needed
+6. Add Environment Variables:
+   - `DATABASE_URL` = `file:./db/custom.db` (for SQLite) or your PostgreSQL/MySQL URL
+7. Click "Deploy"
+8. Your app goes live at `https://bbms-ghana.vercel.app` (or your custom name)
+
+**Note on PDF/DOCX export**: Vercel's serverless functions don't include Python, so PDF/DOCX exports won't work on Vercel. CSV export works fine. For full PDF/DOCX support, deploy on Railway, Render, or a VPS.
+
+### Railway (Supports Python for PDF/DOCX export)
+
+1. Go to [railway.app](https://railway.app) and sign in with GitHub
+2. Click "New Project" → "Deploy from GitHub repo"
+3. Select `bbms-ghana`
+4. Add Environment Variables:
+   - `DATABASE_URL` = `file:./db/custom.db`
+5. Railway auto-detects and builds. Add a Python runtime or use a Dockerfile for PDF/DOCX support.
+
+### Self-Hosted (VPS / Docker)
+
+```bash
+git clone https://github.com/moseskumador146-coder/bbms-ghana.git
+cd bbms-ghana
+cp .env.example .env
+npm install
+npx prisma db push
+npm run seed
+pip install reportlab python-docx
+npm run dev   # or npm run build && npm start for production
 ```
 
 ## Project Structure
